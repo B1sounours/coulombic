@@ -6,11 +6,25 @@ public class RegionManager : MonoBehaviour
 {
     private List<ChargedObject> chargedObjects;
     private List<MovingChargedObject> movingChargedObjects;
+    private bool isInitialized=false;
 
-    void Start()
+    void Update()
     {
-        FindChargedObjects();
-        StartAllCoroutines();
+        if (!isInitialized && IsCloningDone())
+        {
+            FindChargedObjects();
+            StartAllCoroutines();
+            isInitialized = true;
+        }
+    }
+
+    private bool IsCloningDone()
+    {
+        //returns true if some objects in this region are not cloned yet
+        foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, false))
+            if (go.GetComponent<CloneGenerator>() != null)
+                return false;
+        return true;
     }
 
     private void FindChargedObjects()

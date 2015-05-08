@@ -11,6 +11,18 @@ public static class ParentChildFunctions
         return GetAllChildren(parentGameObject, excludeSubstrings, includeParent);
     }
 
+    public static List<GameObject> GetAllParents(GameObject childGameObject)
+    {
+        List<GameObject> parents = new List<GameObject>();
+        while (childGameObject.transform.parent != null)
+        {
+            GameObject parent = childGameObject.transform.parent.gameObject;
+            parents.Add(parent);
+            childGameObject = parent;
+        }
+        return parents;
+    }
+
     public static ArrayList GetAllChildren(GameObject parentGameObject, string[] excludeSubstrings, bool includeParent = false)
     {
         //returns an arraylist of all children, grandchildren, etc.
