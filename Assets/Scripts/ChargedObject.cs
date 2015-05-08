@@ -5,8 +5,28 @@ using UnityEngine.UI;
 public class ChargedObject : MonoBehaviour
 {
     public float charge = 1;
+    public float reverseChargeTimer = 0;
+    private float reverseChargeTimeCount = 0;
+
     private GameObject canvasGameObject;
     private static GameObject canvasPrefab;
+
+    private Text canvasText;
+    private Image canvasImage;
+
+    void Update()
+    {
+        if (reverseChargeTimer > 0)
+        {
+            reverseChargeTimeCount += Time.deltaTime;
+            if (reverseChargeTimeCount > reverseChargeTimer)
+            {
+                reverseChargeTimeCount = 0;
+                charge *= -1;
+                UpdateAppearance();
+            }
+        }
+    }
 
     public void UpdateAppearance()
     {
@@ -28,20 +48,40 @@ public class ChargedObject : MonoBehaviour
         }
         canvasGameObject.GetComponent<Canvas>().enabled = true;
 
-        foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, false))
+        string label = charge.ToString();
+        if (charge > 0)
+            label = "+" + label;
+        GetCanvasText().text = label;
+
+        GetCanvasImage().color = charge > 0 ? Color.cyan : new Color(1f, 0.5f, 0.5f);
+    }
+
+    private Text GetCanvasText()
+    {
+        if (canvasText == null)
         {
-            Text text = go.GetComponent<Text>();
-            Image image = go.GetComponent<Image>();
-            if (text != null)
+            foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, false))
             {
-                string label=charge.ToString();
-                if (charge > 0)
-                    label = "+" + label;
-                text.text = label;
+                Text text = go.GetComponent<Text>();
+                if (text != null)
+                    canvasText = text;
             }
-            if (image != null)
-                image.color = charge > 0 ? Color.cyan : new Color(1f, 0.5f, 0.5f);
         }
+        return canvasText;
+    }
+
+    private Image GetCanvasImage()
+    {
+        if (canvasImage == null)
+        {
+            foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, false))
+            {
+                Image image = go.GetComponent<Image>();
+                if (image != null)
+                    canvasImage = image;
+            }
+        }
+        return canvasImage;
     }
 
     private GameObject GetCanvasPrefab()

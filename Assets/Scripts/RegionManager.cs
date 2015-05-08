@@ -6,7 +6,7 @@ public class RegionManager : MonoBehaviour
 {
     private List<ChargedObject> chargedObjects;
     private List<MovingChargedObject> movingChargedObjects;
-    private bool isInitialized=false;
+    private bool isInitialized = false;
 
     void Update()
     {
@@ -33,7 +33,7 @@ public class RegionManager : MonoBehaviour
         movingChargedObjects = new List<MovingChargedObject>();
         foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, false))
         {
-            ChargedObject co=go.GetComponent<ChargedObject>();
+            ChargedObject co = go.GetComponent<ChargedObject>();
             if (co != null)
             {
                 chargedObjects.Add(co);
@@ -50,6 +50,25 @@ public class RegionManager : MonoBehaviour
     {
         foreach (MovingChargedObject mco in movingChargedObjects)
             StartCoroutine(Cycle(mco));
+        //StartCoroutine(RecalculateMagnetInterval());
+    }
+
+
+    private IEnumerator RecalculateMagnetInterval()
+    {
+        while (true)
+        {
+            if (Time.smoothDeltaTime > 0)
+            {
+                float ratio = Time.smoothDeltaTime * GameSettings.targetFPS;
+                float newInterval = GameSettings.magnetInterval * ratio;
+                Debug.Log("smooth: " + Time.smoothDeltaTime + " old: " + GameSettings.magnetInterval + " new:" + newInterval+" ratio:"+ratio);
+                newInterval = Mathf.Clamp(newInterval, GameSettings.minimumMagnetInterval, 1);
+                GameSettings.magnetInterval = newInterval;
+            }
+            yield return new WaitForSeconds(1);
+        }
+
     }
 
     private IEnumerator Cycle(MovingChargedObject mco)
@@ -60,11 +79,11 @@ public class RegionManager : MonoBehaviour
             if (isFirst)
             {
                 isFirst = false;
-                yield return new WaitForSeconds(Random.Range(0, GameSettings.magnetPhysicsInterval));
+                yield return new WaitForSeconds(Random.Range(0, GameSettings.magnetInterval));
             }
 
             ApplyMagneticForce(mco);
-            yield return new WaitForSeconds(GameSettings.magnetPhysicsInterval);
+            yield return new WaitForSeconds(GameSettings.magnetInterval);
         }
     }
 
@@ -77,13 +96,13 @@ public class RegionManager : MonoBehaviour
                 continue;
 
             float distance = Vector3.Distance(mco.transform.position, chargedObject.gameObject.transform.position);
-            float force = 1000* mco.GetCharge() * chargedObject.charge / Mathf.Pow(distance, 2);
+            float force = 1000 * mco.GetCharge() * chargedObject.charge / Mathf.Pow(distance, 2);
             Vector3 direction;
 
             direction = mco.transform.position - chargedObject.transform.position;
             direction.Normalize();
 
-            newForce += force * direction * GameSettings.magnetPhysicsInterval;
+            newForce += force * direction * GameSettings.magnetInterval;
         }
 
         mco.AddForce(newForce);
