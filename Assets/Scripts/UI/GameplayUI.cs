@@ -27,7 +27,11 @@ public class GameplayUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
             SetGameMenuMode(gameMenuMode == GameMenuModes.gameplay ? GameMenuModes.toolSelect : GameMenuModes.gameplay);
 
-        //if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G))
+            FindObjectOfType<GameManager>().SetGamePause(false);
+
+        if (Input.GetKeyDown(KeyCode.R))
+            Application.LoadLevel(Application.loadedLevel);
     }
 
     public void SetGameMenuMode(GameMenuModes newGameMenuMode)
@@ -37,8 +41,6 @@ public class GameplayUI : MonoBehaviour
         MainMenu.SetVisibility(toolSelectCanvas, gameMenuMode == GameMenuModes.toolSelect);
         MainMenu.SetVisibility(GetComponent<Canvas>(), gameMenuMode == GameMenuModes.gameplay);
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
-
-        FindObjectOfType<GameManager>().SetGamePause(gameMenuMode != GameMenuModes.gameplay);
     }
 
     public void SelectToolClick(int toolID)

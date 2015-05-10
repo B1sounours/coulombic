@@ -12,6 +12,7 @@ public class ScoreWall : MonoBehaviour
     private RegionManager regionManager;
     private static GameObject particlesPrefab;
     private static AudioClip[] lightningSounds;
+    private static GameObject particlesContainer;
 
     void Start()
     {
@@ -29,7 +30,13 @@ public class ScoreWall : MonoBehaviour
                 scoreWall.chargeMultiplier = chargeMultiplier;
             }
         }
+    }
 
+    private GameObject GetParticlesContainer()
+    {
+        if (particlesContainer == null)
+            particlesContainer = new GameObject("particles container");
+        return particlesContainer;
     }
 
     public float GetScore()
@@ -90,8 +97,9 @@ public class ScoreWall : MonoBehaviour
     }
 
     private void MakeLightning(Vector3 position)
-    {
+    {        
         GameObject particles = Instantiate(GetParticlesPrefab(), position, transform.rotation) as GameObject;
+        particles.transform.parent = GetParticlesContainer().transform;
         float lifetime = particles.GetComponent<ParticleSystem>().duration + particles.GetComponent<ParticleSystem>().startLifetime;
         Destroy(particles, lifetime);
 
