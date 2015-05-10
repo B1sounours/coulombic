@@ -15,7 +15,7 @@ public class GameplayUI : MonoBehaviour
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
 
     private static Sprite[] toolSprites;
-    private int selectedTool = 1; //add:0  subtract:1  divide:2  multiply:3
+    private Tools selectedTool = Tools.add;
 
     void Start()
     {
@@ -37,6 +37,16 @@ public class GameplayUI : MonoBehaviour
             Application.LoadLevel(Application.loadedLevel);
     }
 
+    public GameMenuModes GetGameMenuMode()
+    {
+        return gameMenuMode;
+    }
+
+    public Tools GetSelectedTool()
+    {
+        return selectedTool;
+    }
+
     public void SetGameMenuMode(GameMenuModes newGameMenuMode)
     {
         gameMenuMode = newGameMenuMode;
@@ -49,11 +59,12 @@ public class GameplayUI : MonoBehaviour
     public void SelectToolClick(int toolID)
     {
         SelectTool(toolID);
+        SetGameMenuMode(GameMenuModes.gameplay);
     }
 
     private void SelectTool(int toolID)
     {
-        selectedTool = toolID;
+        selectedTool = (Tools)toolID;
         selectedToolImage.sprite = GetToolSprite(toolID);
     }
 

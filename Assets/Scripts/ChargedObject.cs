@@ -30,7 +30,15 @@ public class ChargedObject : MonoBehaviour
 
     public void UpdateAppearance()
     {
-        GetComponent<Renderer>().material.color = charge > 0 ? Color.red : Color.green;
+        Color color;
+        if (charge > 0)
+            color = Color.red;
+        else if (charge < 0)
+            color = Color.green;
+        else
+            color = Color.black;
+        GetComponent<Renderer>().material.color = color;
+
         if (canvasGameObject == null)
         {
             canvasGameObject = Instantiate(GetCanvasPrefab(), transform.position, transform.rotation) as GameObject;
