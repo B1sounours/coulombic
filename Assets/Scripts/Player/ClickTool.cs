@@ -13,7 +13,7 @@ public class ClickTool : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && GetGameplayUI().GetGameMenuMode()==GameMenuModes.gameplay)
+        if (Input.GetMouseButtonDown(0) && GetGameplayUI().GetGameMenuMode() == GameMenuModes.gameplay)
         {
             Vector3 pos = transform.position;
             Vector3 forward = Camera.main.transform.forward;
@@ -36,19 +36,26 @@ public class ClickTool : MonoBehaviour
         ChargedObject co = clickedObject.GetComponent<ChargedObject>();
         if (co != null)
         {
-            Tools tool = FindObjectOfType<GameplayUI>().GetSelectedTool();
-            if (tool == Tools.add)
-                co.charge += 1;
-            if (tool == Tools.subtract)
-                co.charge -= 1;
-            if (tool == Tools.divide)
-                co.charge /= 2;
-            if (tool == Tools.multiply)
-                co.charge *= 2;
+            if (co.isLocked)
+            {
+                GetGameplayUI().PromptCannotChangeCharge(clickedObject);
+            }
+            else
+            {
+                Tools tool = FindObjectOfType<GameplayUI>().GetSelectedTool();
+                if (tool == Tools.add)
+                    co.charge += 1;
+                if (tool == Tools.subtract)
+                    co.charge -= 1;
+                if (tool == Tools.divide)
+                    co.charge /= 2;
+                if (tool == Tools.multiply)
+                    co.charge *= 2;
 
-            co.charge = Mathf.Clamp(co.charge, -GameSettings.maximumCharge, GameSettings.maximumCharge);
+                co.charge = Mathf.Clamp(co.charge, -GameSettings.maximumCharge, GameSettings.maximumCharge);
 
-            co.UpdateAppearance();
+                co.UpdateAppearance();
+            }
         }
     }
 }

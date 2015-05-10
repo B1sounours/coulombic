@@ -7,6 +7,8 @@ public class ScoreWall : MonoBehaviour
     public float velocityMultiplier = 1;
     public float massMultiplier = 0;
     public float chargeMultiplier = 0;
+    public float positiveChargeMultiplier = 0;
+    public float negativeChargeMultiplier = 0;
 
     private float score = 0;
     private RegionManager regionManager;
@@ -23,11 +25,14 @@ public class ScoreWall : MonoBehaviour
     {
         foreach (GameObject child in ParentChildFunctions.GetAllChildren(gameObject, false))
         {
-            if (child.GetComponent<Collider>()!=null){
+            if (child.GetComponent<Collider>() != null)
+            {
                 ScoreWall scoreWall = child.AddComponent<ScoreWall>();
                 scoreWall.velocityMultiplier = velocityMultiplier;
                 scoreWall.massMultiplier = massMultiplier;
                 scoreWall.chargeMultiplier = chargeMultiplier;
+                scoreWall.positiveChargeMultiplier = positiveChargeMultiplier;
+                scoreWall.negativeChargeMultiplier = negativeChargeMultiplier;
             }
         }
     }
@@ -91,13 +96,19 @@ public class ScoreWall : MonoBehaviour
 
         ChargedObject co = collision.gameObject.GetComponent<ChargedObject>();
         if (co != null)
+        {
             points += co.charge * chargeMultiplier;
+            if (co.charge > 0)
+                points += co.charge * positiveChargeMultiplier;
+            if (co.charge < 0)
+                points += co.charge * negativeChargeMultiplier;
+        }
 
         score += points;
     }
 
     private void MakeLightning(Vector3 position)
-    {        
+    {
         GameObject particles = Instantiate(GetParticlesPrefab(), position, transform.rotation) as GameObject;
         particles.transform.parent = GetParticlesContainer().transform;
         float lifetime = particles.GetComponent<ParticleSystem>().duration + particles.GetComponent<ParticleSystem>().startLifetime;

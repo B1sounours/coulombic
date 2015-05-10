@@ -6,6 +6,7 @@ public class ChargedObject : MonoBehaviour
 {
     public float charge = 1;
     public float reverseChargeTimer = 0;
+    public bool isLocked = false;
     private float reverseChargeTimeCount = 0;
 
     private GameObject canvasGameObject;
@@ -44,58 +45,19 @@ public class ChargedObject : MonoBehaviour
             canvasGameObject = Instantiate(GetCanvasPrefab(), transform.position, transform.rotation) as GameObject;
             canvasGameObject.transform.SetParent(transform);
         }
-        UpdateCanvasAppearance();
+        UpdateCanvas();
     }
 
-    private void UpdateCanvasAppearance()
+    private void UpdateCanvas()
     {
-        if (charge == 0)
-        {
-            canvasGameObject.GetComponent<Canvas>().enabled = false;
-            return;
-        }
-        canvasGameObject.GetComponent<Canvas>().enabled = true;
-
-        string label = charge.ToString();
-        if (charge > 0)
-            label = "+" + label;
-        GetCanvasText().text = label;
-
-        GetCanvasImage().color = charge > 0 ? Color.cyan : new Color(1f, 0.5f, 0.5f);
-    }
-
-    private Text GetCanvasText()
-    {
-        if (canvasText == null)
-        {
-            foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, false))
-            {
-                Text text = go.GetComponent<Text>();
-                if (text != null)
-                    canvasText = text;
-            }
-        }
-        return canvasText;
-    }
-
-    private Image GetCanvasImage()
-    {
-        if (canvasImage == null)
-        {
-            foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, false))
-            {
-                Image image = go.GetComponent<Image>();
-                if (image != null)
-                    canvasImage = image;
-            }
-        }
-        return canvasImage;
+        ChargedObjectUI chargedObjectUI=canvasGameObject.GetComponent<ChargedObjectUI>();
+        chargedObjectUI.UpdateAppearance(charge,isLocked);
     }
 
     private GameObject GetCanvasPrefab()
     {
         if (canvasPrefab == null)
-            canvasPrefab = Resources.Load("prefabs/charge canvas") as GameObject;
+            canvasPrefab = Resources.Load("prefabs/ChargeCanvas") as GameObject;
         return canvasPrefab;
     }
 }
