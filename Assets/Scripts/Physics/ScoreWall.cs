@@ -4,11 +4,13 @@ using System.Collections;
 public class ScoreWall : MonoBehaviour
 {
 
-    public float velocityMultiplier = 1;
+    public float velocityMultiplier = 0;
     public float massMultiplier = 0;
     public float chargeMultiplier = 0;
     public float positiveChargeMultiplier = 0;
     public float negativeChargeMultiplier = 0;
+    public float baseValue = 1;
+    public bool startVisible = false;
 
     private float score = 0;
     private RegionManager regionManager;
@@ -19,6 +21,16 @@ public class ScoreWall : MonoBehaviour
     void Start()
     {
         SetAllChildren();
+        SetRenderVisibility(startVisible);
+    }
+
+    private void SetRenderVisibility(bool isVisibile)
+    {
+        foreach (GameObject child in ParentChildFunctions.GetAllChildren(gameObject, true))
+        {
+            if (child.GetComponent<Renderer>() != null)
+                child.GetComponent<Renderer>().enabled = isVisibile;
+        }
     }
 
     private void SetAllChildren()
@@ -33,6 +45,8 @@ public class ScoreWall : MonoBehaviour
                 scoreWall.chargeMultiplier = chargeMultiplier;
                 scoreWall.positiveChargeMultiplier = positiveChargeMultiplier;
                 scoreWall.negativeChargeMultiplier = negativeChargeMultiplier;
+                scoreWall.baseValue = baseValue;
+                scoreWall.startVisible = startVisible;
             }
         }
     }
@@ -67,27 +81,16 @@ public class ScoreWall : MonoBehaviour
         return particlesPrefab;
     }
 
-    private RegionManager GetRegionManager()
+    public RegionManager GetRegionManager()
     {
-        Transform transformParent = transform.parent;
-        while (regionManager == null && transformParent != null)
-        {
-            if (transformParent.gameObject.GetComponent<RegionManager>() != null)
-            {
-                regionManager = transformParent.GetComponent<RegionManager>();
-                break;
-            }
-            transformParent = transformParent.parent;
-        }
-
         if (regionManager == null)
-            Debug.LogError("ScoreWall must be the child of a RegionManager.");
+            regionManager = RegionManager.GetMyRegionManager(gameObject);
         return regionManager;
     }
 
     private void AddScore(Collision collision)
     {
-        float points = 0;
+        float points = baseValue;
         points += collision.relativeVelocity.magnitude * velocityMultiplier;
 
         Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
@@ -125,6 +128,7 @@ public class ScoreWall : MonoBehaviour
         if (chargedObject != null)
         {
             AddScore(collision);
+            SetRenderVisibility(true);
             MakeLightning(collision.transform.position);
             GetRegionManager().DestroyChargedObject(chargedObject);
         }

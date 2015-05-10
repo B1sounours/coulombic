@@ -12,8 +12,9 @@ public class MovingChargedObject : MonoBehaviour
 
     void Start()
     {
-        if (transform.parent.gameObject.GetComponent<RegionManager>() == null)
-            Debug.LogError("MovingChargedObject not the child of any RegionManager.");
+        //throws a LogError if no region manager
+        RegionManager.GetMyRegionManager(gameObject);
+
         GetRigidbody().velocity = startVelocity;
         GetRigidbody().mass = mass;
         UpdateSize();

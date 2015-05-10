@@ -10,7 +10,7 @@ public class RegionManager : MonoBehaviour
 
     void Update()
     {
-        if (!isInitialized && IsCloningDone())
+        if (!isInitialized && AllChargedObjectsAreGenerated())
         {
             FindChargedObjects();
             StartAllCoroutines();
@@ -18,12 +18,33 @@ public class RegionManager : MonoBehaviour
         }
     }
 
-    private bool IsCloningDone()
+    public static RegionManager GetMyRegionManager(GameObject childObject)
+    {
+        RegionManager regionManager=null;
+        Transform transformParent = childObject.transform.parent;
+        while (regionManager == null && transformParent != null)
+        {
+            if (transformParent.gameObject.GetComponent<RegionManager>() != null)
+            {
+                regionManager = transformParent.GetComponent<RegionManager>();
+                break;
+            }
+            transformParent = transformParent.parent;
+        }
+
+        if (regionManager == null)
+            Debug.LogError("ScoreWall must be the child of a RegionManager.");
+        return regionManager;
+    }
+
+    private bool AllChargedObjectsAreGenerated()
     {
         //returns true if some objects in this region are not cloned yet
-        foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, false))
+        foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, true))
+        {
             if (go.GetComponent<CloneGenerator>() != null)
                 return false;
+        }
         return true;
     }
 
