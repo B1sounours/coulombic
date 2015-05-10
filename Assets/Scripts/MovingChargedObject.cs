@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent (typeof(ChargedObject))]
+[RequireComponent(typeof(ChargedObject))]
 public class MovingChargedObject : MonoBehaviour
-{    
+{
     public float mass = 1;
     public Vector3 startVelocity;
     private Rigidbody rigidbody;
@@ -12,6 +12,8 @@ public class MovingChargedObject : MonoBehaviour
 
     void Start()
     {
+        if (transform.parent.gameObject.GetComponent<RegionManager>() == null)
+            Debug.LogError("MovingChargedObject not the child of any RegionManager.");
         GetRigidbody().velocity = startVelocity;
         GetRigidbody().mass = mass;
         UpdateSize();
@@ -37,7 +39,8 @@ public class MovingChargedObject : MonoBehaviour
 
     public void AddForce(Vector3 force)
     {
-        rigidbody.AddForce(force);
+        if (rigidbody != null)
+            rigidbody.AddForce(force);
     }
 
     public Rigidbody GetRigidbody()

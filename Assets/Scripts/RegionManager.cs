@@ -27,6 +27,23 @@ public class RegionManager : MonoBehaviour
         return true;
     }
 
+    public void DestroyChargedObject(ChargedObject chargedObject)
+    {
+        MovingChargedObject movingChargedObject = chargedObject.gameObject.GetComponent<MovingChargedObject>();
+        if (movingChargedObject != null)
+        {
+            if (movingChargedObjects.Contains(movingChargedObject))
+                movingChargedObjects.Remove(movingChargedObject);
+            else
+                Debug.LogError("DestroyChargedObject called but RegionManager does not have this mco.");
+        }
+        chargedObjects.Remove(chargedObject);
+
+        Destroy(chargedObject.gameObject);
+        Destroy(chargedObject);
+        Destroy(movingChargedObject);
+    }
+
     private void FindChargedObjects()
     {
         chargedObjects = new List<ChargedObject>();
@@ -42,8 +59,8 @@ public class RegionManager : MonoBehaviour
                     movingChargedObjects.Add(go.GetComponent<MovingChargedObject>());
             }
         }
-        Debug.Log("found " + chargedObjects.Count + " charged");
-        Debug.Log("found " + movingChargedObjects.Count + " moving charged");
+        //Debug.Log("found " + chargedObjects.Count + " charged");
+        //Debug.Log("found " + movingChargedObjects.Count + " moving charged");
     }
 
     private void StartAllCoroutines()
@@ -62,7 +79,7 @@ public class RegionManager : MonoBehaviour
             {
                 float ratio = Time.smoothDeltaTime * GameSettings.targetFPS;
                 float newInterval = GameSettings.magnetInterval * ratio;
-                Debug.Log("smooth: " + Time.smoothDeltaTime + " old: " + GameSettings.magnetInterval + " new:" + newInterval+" ratio:"+ratio);
+                Debug.Log("smooth: " + Time.smoothDeltaTime + " old: " + GameSettings.magnetInterval + " new:" + newInterval + " ratio:" + ratio);
                 newInterval = Mathf.Clamp(newInterval, GameSettings.minimumMagnetInterval, 1);
                 GameSettings.magnetInterval = newInterval;
             }
@@ -82,8 +99,15 @@ public class RegionManager : MonoBehaviour
                 yield return new WaitForSeconds(Random.Range(0, GameSettings.magnetInterval));
             }
 
-            ApplyMagneticForce(mco);
-            yield return new WaitForSeconds(GameSettings.magnetInterval);
+            if (mco == null)
+            {
+                break;
+            }
+            else
+            {
+                ApplyMagneticForce(mco);
+                yield return new WaitForSeconds(GameSettings.magnetInterval);
+            }
         }
     }
 
