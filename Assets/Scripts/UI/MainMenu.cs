@@ -2,27 +2,46 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour {
-    public GameObject puzzleGameObject,creditsGameObject;
+public class MainMenu : MonoBehaviour
+{
+    public GameObject puzzleGameObject, creditsGameObject, sandboxGameObject;
     public Button[] mainButtons;
 
+    private enum MenuModes
+    {
+        clear, puzzle, sandbox, credits
+    }
+    private MenuModes menuMode;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         SetUIVisibility(puzzleGameObject, false);
+        SetUIVisibility(sandboxGameObject, false);
         SetUIVisibility(creditsGameObject, false);
-	}
+    }
+
+    private void SetMenuMode(MenuModes newMenuMode)
+    {
+        menuMode = newMenuMode;
+        SetUIVisibility(puzzleGameObject, menuMode == MenuModes.puzzle);
+        SetUIVisibility(sandboxGameObject, menuMode == MenuModes.sandbox);
+        SetUIVisibility(creditsGameObject, menuMode == MenuModes.credits);
+    }
 
     public void PuzzleClick()
     {
-        SetUIVisibility(puzzleGameObject, true);
-        SetUIVisibility(creditsGameObject, false);
+        SetMenuMode(MenuModes.puzzle);
+    }
+
+    public void SandboxClick()
+    {
+        SetMenuMode(MenuModes.sandbox);
     }
 
     public void CreditsClick()
     {
-        SetUIVisibility(puzzleGameObject, false);
-        SetUIVisibility(creditsGameObject, true);
+        SetMenuMode(MenuModes.credits);
     }
 
     public void ChoosePuzzleClick(int levelID)
@@ -35,8 +54,11 @@ public class MainMenu : MonoBehaviour {
         Application.Quit();
     }
 
-    public static void SetUIVisibility(GameObject visibilityGameObject,bool isVisible)
+    public static void SetUIVisibility(GameObject visibilityGameObject, bool isVisible)
     {
+        if (visibilityGameObject == null)
+            return;
+
         foreach (GameObject child in ParentChildFunctions.GetAllChildren(visibilityGameObject, true))
         {
             if (child.GetComponent<Canvas>() != null)
