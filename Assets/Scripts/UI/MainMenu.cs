@@ -13,24 +13,24 @@ public class MainMenu : MonoBehaviour {
         SetVisibility(creditsCanvas, false);
 	}
 
-    public void PuzzlePress()
+    public void PuzzleClick()
     {
         SetVisibility(puzzleCanvas, true);
         SetVisibility(creditsCanvas, false);
     }
 
-    public void CreditsPress()
+    public void CreditsClick()
     {
         SetVisibility(puzzleCanvas, false);
         SetVisibility(creditsCanvas, true);
     }
 
-    public void ChoosePuzzlePress(int levelID)
+    public void ChoosePuzzleClick(int levelID)
     {
         Application.LoadLevel(levelID);
     }
 
-    public void ExitPress()
+    public void ExitClick()
     {
         Application.Quit();
     }
