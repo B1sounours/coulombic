@@ -8,13 +8,19 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        StartUI();
         SetGamePause(startPaused);
+    }
+
+    private void StartUI()
+    {
+        GameObject prefab = Resources.Load<GameObject>("prefabs/GameplayCanvas");
+        GameObject gameplayGameObject= Instantiate(prefab);
     }
 
     public void SetGamePause(bool isPaused)
     {
         this.isPaused = isPaused;
-        //Time.timeScale = isPaused ? 0 : 1;
 
         foreach (ChargedObject co in FindObjectsOfType<ChargedObject>())
             co.enabled = !isPaused;
@@ -22,8 +28,6 @@ public class GameManager : MonoBehaviour
             mco.enabled = !isPaused;
         foreach (Rigidbody rigidbody in FindObjectsOfType<Rigidbody>())
             rigidbody.constraints = isPaused ? RigidbodyConstraints.FreezeAll : 0;
-
-
     }
 
     public bool GetIsPaused()

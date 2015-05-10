@@ -10,7 +10,8 @@ public enum GameMenuModes
 public class GameplayUI : MonoBehaviour
 {
     public Image selectedToolImage;
-    public Canvas toolSelectCanvas;
+    public GameObject toolSelectContainer;
+    public GameObject gameplayContainer;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
 
@@ -50,9 +51,8 @@ public class GameplayUI : MonoBehaviour
     public void SetGameMenuMode(GameMenuModes newGameMenuMode)
     {
         gameMenuMode = newGameMenuMode;
-
-        MainMenu.SetVisibility(toolSelectCanvas, gameMenuMode == GameMenuModes.toolSelect);
-        MainMenu.SetVisibility(GetComponent<Canvas>(), gameMenuMode == GameMenuModes.gameplay);
+        MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
+        MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
     }
 

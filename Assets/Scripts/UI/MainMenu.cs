@@ -3,26 +3,26 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour {
-    public Canvas puzzleCanvas,creditsCanvas;
+    public GameObject puzzleGameObject,creditsGameObject;
     public Button[] mainButtons;
 
 
 	// Use this for initialization
 	void Start () {
-        SetVisibility(puzzleCanvas, false);
-        SetVisibility(creditsCanvas, false);
+        SetUIVisibility(puzzleGameObject, false);
+        SetUIVisibility(creditsGameObject, false);
 	}
 
     public void PuzzleClick()
     {
-        SetVisibility(puzzleCanvas, true);
-        SetVisibility(creditsCanvas, false);
+        SetUIVisibility(puzzleGameObject, true);
+        SetUIVisibility(creditsGameObject, false);
     }
 
     public void CreditsClick()
     {
-        SetVisibility(puzzleCanvas, false);
-        SetVisibility(creditsCanvas, true);
+        SetUIVisibility(puzzleGameObject, false);
+        SetUIVisibility(creditsGameObject, true);
     }
 
     public void ChoosePuzzleClick(int levelID)
@@ -35,9 +35,9 @@ public class MainMenu : MonoBehaviour {
         Application.Quit();
     }
 
-    public static void SetVisibility(Canvas canvas,bool isVisible)
+    public static void SetUIVisibility(GameObject visibilityGameObject,bool isVisible)
     {
-        foreach (GameObject child in ParentChildFunctions.GetAllChildren(canvas.gameObject, true))
+        foreach (GameObject child in ParentChildFunctions.GetAllChildren(visibilityGameObject, true))
         {
             if (child.GetComponent<Canvas>() != null)
                 child.GetComponent<Canvas>().enabled = isVisible;
