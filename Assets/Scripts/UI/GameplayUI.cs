@@ -28,7 +28,10 @@ public class GameplayUI : MonoBehaviour
             SetGameMenuMode(gameMenuMode == GameMenuModes.gameplay ? GameMenuModes.toolSelect : GameMenuModes.gameplay);
 
         if (Input.GetKeyDown(KeyCode.G))
+        {
+            SetGameMenuMode(GameMenuModes.gameplay);
             FindObjectOfType<GameManager>().SetGamePause(false);
+        }
 
         if (Input.GetKeyDown(KeyCode.R))
             Application.LoadLevel(Application.loadedLevel);
