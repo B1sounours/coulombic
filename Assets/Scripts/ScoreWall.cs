@@ -13,6 +13,25 @@ public class ScoreWall : MonoBehaviour
     private static GameObject particlesPrefab;
     private static AudioClip[] lightningSounds;
 
+    void Start()
+    {
+        SetAllChildren();
+    }
+
+    private void SetAllChildren()
+    {
+        foreach (GameObject child in ParentChildFunctions.GetAllChildren(gameObject, false))
+        {
+            if (child.GetComponent<Collider>()!=null){
+                ScoreWall scoreWall = child.AddComponent<ScoreWall>();
+                scoreWall.velocityMultiplier = velocityMultiplier;
+                scoreWall.massMultiplier = massMultiplier;
+                scoreWall.chargeMultiplier = chargeMultiplier;
+            }
+        }
+
+    }
+
     public float GetScore()
     {
         return score;
@@ -38,12 +57,17 @@ public class ScoreWall : MonoBehaviour
 
     private RegionManager GetRegionManager()
     {
-        if (regionManager == null)
+        Transform transformParent = transform.parent;
+        while (regionManager == null && transformParent != null)
         {
-            Transform transformParent = transform.parent;
-            if (transformParent != null)
-                regionManager = transformParent.gameObject.GetComponent<RegionManager>();
+            if (transformParent.gameObject.GetComponent<RegionManager>() != null)
+            {
+                regionManager = transformParent.GetComponent<RegionManager>();
+                break;
+            }
+            transformParent = transformParent.parent;
         }
+
         if (regionManager == null)
             Debug.LogError("ScoreWall must be the child of a RegionManager.");
         return regionManager;
