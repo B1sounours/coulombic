@@ -36,7 +36,7 @@ public class ClickTool : MonoBehaviour
     private void Click(GameObject clickedObject)
     {
         ChargedObject co = clickedObject.GetComponent<ChargedObject>();
-        Tools tool = FindObjectOfType<GameplayUI>().GetSelectedTool();
+        Tools tool = GetGameplayUI().GetSelectedTool();
         if (co != null)
         {
             if (co.isLocked)
@@ -64,6 +64,7 @@ public class ClickTool : MonoBehaviour
 
                 co.UpdateAppearance();
             }
+            GetGameplayUI().UpdateSelectedToolAppearance();
         }
     }
 }
