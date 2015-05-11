@@ -78,7 +78,7 @@ public class GameplayUI : MonoBehaviour
         int toolID = (int)selectedTool;
         selectedToolImage.sprite = GetToolSprite(toolID);
         int count = FindObjectOfType<ClickTool>().toolCharges[toolID];
-        selectedToolCount.text = ToolSelectUI.GetCountText(count);
+        selectedToolCount.text = ToolSelectUI.GetCountText(count,FindObjectOfType<ClickTool>());
     }
 
     private Sprite GetToolSprite(int toolID)

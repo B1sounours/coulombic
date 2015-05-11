@@ -12,14 +12,16 @@ public class ToolSelectUI : MonoBehaviour
         for (int i = 0; i < toolContainers.Length; i++)
         {
             int charges = clickTool.toolCharges[i];
-            GetCountTexts()[i].text = GetCountText(charges);
-            if (charges < 1)
+            GetCountTexts()[i].text = GetCountText(charges,clickTool);
+            if (charges < 1 && !clickTool.infiniteCharges)
                 MainMenu.SetUIVisibility(toolContainers[i], false);
         }
     }
 
-    public static string GetCountText(int count)
+    public static string GetCountText(int count,ClickTool clickTool)
     {
+		if (clickTool.infiniteCharges)
+			return "";
         return count > 0 ? count + "\nleft" : "0";
     }
 
