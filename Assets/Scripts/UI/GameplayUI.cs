@@ -48,11 +48,6 @@ public class GameplayUI : MonoBehaviour
         return selectedTool;
     }
 
-    public void PromptCannotChangeCharge(GameObject clickedObject)
-    {
-
-    }
-
     public void SetGameMenuMode(GameMenuModes newGameMenuMode)
     {
         gameMenuMode = newGameMenuMode;

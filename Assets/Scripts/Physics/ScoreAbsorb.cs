@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ScoreWall : MonoBehaviour
+public class ScoreAbsorb : MonoBehaviour
 {
 
     public float velocityMultiplier = 0;
@@ -39,14 +39,14 @@ public class ScoreWall : MonoBehaviour
         {
             if (child.GetComponent<Collider>() != null)
             {
-                ScoreWall scoreWall = child.AddComponent<ScoreWall>();
-                scoreWall.velocityMultiplier = velocityMultiplier;
-                scoreWall.massMultiplier = massMultiplier;
-                scoreWall.chargeMultiplier = chargeMultiplier;
-                scoreWall.positiveChargeMultiplier = positiveChargeMultiplier;
-                scoreWall.negativeChargeMultiplier = negativeChargeMultiplier;
-                scoreWall.baseValue = baseValue;
-                scoreWall.startVisible = startVisible;
+                ScoreAbsorb scoreAbsorb = child.AddComponent<ScoreAbsorb>();
+                scoreAbsorb.velocityMultiplier = velocityMultiplier;
+                scoreAbsorb.massMultiplier = massMultiplier;
+                scoreAbsorb.chargeMultiplier = chargeMultiplier;
+                scoreAbsorb.positiveChargeMultiplier = positiveChargeMultiplier;
+                scoreAbsorb.negativeChargeMultiplier = negativeChargeMultiplier;
+                scoreAbsorb.baseValue = baseValue;
+                scoreAbsorb.startVisible = startVisible;
             }
         }
     }

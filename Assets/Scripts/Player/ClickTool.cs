@@ -10,6 +10,8 @@ public class ClickTool : MonoBehaviour
 {
     private float range = 50;
     private GameplayUI gameplayUI;
+    public int[] toolCharges;
+    public bool infiniteCharges = false;
 
     void Update()
     {
@@ -34,15 +36,21 @@ public class ClickTool : MonoBehaviour
     private void Click(GameObject clickedObject)
     {
         ChargedObject co = clickedObject.GetComponent<ChargedObject>();
+        Tools tool = FindObjectOfType<GameplayUI>().GetSelectedTool();
         if (co != null)
         {
             if (co.isLocked)
             {
-                GetGameplayUI().PromptCannotChangeCharge(clickedObject);
+                Debug.Log("prompt: cannot change locked charged object");
+            }
+            else if (!infiniteCharges && toolCharges[(int)tool] < 1)
+            {
+                Debug.Log("prompt: tool is depleted");
             }
             else
             {
-                Tools tool = FindObjectOfType<GameplayUI>().GetSelectedTool();
+                toolCharges[(int)tool]--;
+
                 if (tool == Tools.add)
                     co.charge += 1;
                 if (tool == Tools.subtract)
