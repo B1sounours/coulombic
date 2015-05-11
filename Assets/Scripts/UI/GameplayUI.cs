@@ -10,8 +10,7 @@ public enum GameMenuModes
 public class GameplayUI : MonoBehaviour
 {
     public Image selectedToolImage;
-    public GameObject toolSelectContainer;
-    public GameObject gameplayContainer;
+    public GameObject toolSelectContainer, gameplayContainer;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
 
@@ -36,6 +35,9 @@ public class GameplayUI : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
             Application.LoadLevel(Application.loadedLevel);
+
+        if (Input.GetKeyDown(KeyCode.M))
+            Application.LoadLevel("Main Menu");
     }
 
     public GameMenuModes GetGameMenuMode()
@@ -53,7 +55,13 @@ public class GameplayUI : MonoBehaviour
         gameMenuMode = newGameMenuMode;
         MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
         MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
+        UpdateToolSelectAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
+    }
+
+    private void UpdateToolSelectAppearance()
+    {
+
     }
 
     public void SelectToolClick(int toolID)
