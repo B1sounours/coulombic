@@ -13,6 +13,7 @@ public static class SoundManager
 
     private static void Initialize()
     {
+        isInitialized = true;
         sounds = new AudioClip[2];
         sounds[0] = Resources.Load<AudioClip>("sounds/click");
         sounds[1] = Resources.Load<AudioClip>("sounds/depleted");

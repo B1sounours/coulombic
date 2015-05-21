@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public bool startPaused = true;
     private bool isPaused = true;
     public GameObject templeRegion;
+    public int levelIndex = 0;
 
     void Start()
     {

@@ -4,14 +4,15 @@ using UnityEngine.UI;
 
 public enum GameMenuModes
 {
-    gameplay, toolSelect
+    gameplay, toolSelect, challengeInfo
 }
 
 public class GameplayUI : MonoBehaviour
 {
     public Image selectedToolImage;
     public Text selectedToolCount;
-    public GameObject toolSelectContainer, gameplayContainer;
+
+    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
 
@@ -20,7 +21,7 @@ public class GameplayUI : MonoBehaviour
 
     void Start()
     {
-        SetGameMenuMode(GameMenuModes.gameplay);
+        SetGameMenuMode(GameMenuModes.challengeInfo);
         SelectTool(0);
     }
 
@@ -37,6 +38,9 @@ public class GameplayUI : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
             Application.LoadLevel(Application.loadedLevel);
+
+        if (Input.GetKeyDown(KeyCode.C))
+            SetGameMenuMode(gameMenuMode == GameMenuModes.gameplay ? GameMenuModes.challengeInfo : GameMenuModes.gameplay);
 
         if (Input.GetKeyDown(KeyCode.M))
             Application.LoadLevel("Main Menu");
@@ -57,8 +61,16 @@ public class GameplayUI : MonoBehaviour
         gameMenuMode = newGameMenuMode;
         MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
         MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
+        MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
+        challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
+    }
+
+    public void ChallengeInfoButtonClick()
+    {
+        SoundManager.PlaySound(GameSounds.click);
+        SetGameMenuMode(GameMenuModes.gameplay);
     }
 
     public void SelectToolClick(int toolID)
