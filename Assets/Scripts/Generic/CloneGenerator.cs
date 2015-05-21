@@ -42,6 +42,9 @@ public class CloneGenerator : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
+        if (GetComponent<ChargedObject>() != null && GetComponent<ChargedObject>().charge > 0)
+            Gizmos.color = Color.green;        
+
         foreach (Vector3 point in GetPoints())
             Gizmos.DrawSphere(gameObject.transform.position + point, 0.2f);
 
