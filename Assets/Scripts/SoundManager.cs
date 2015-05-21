@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum GameSounds
 {
-    click = 0, depleted = 1
+    click = 0, depleted = 1, victory=2
 }
 
 public static class SoundManager
@@ -14,9 +14,10 @@ public static class SoundManager
     private static void Initialize()
     {
         isInitialized = true;
-        sounds = new AudioClip[2];
+        sounds = new AudioClip[3];
         sounds[0] = Resources.Load<AudioClip>("sounds/click");
         sounds[1] = Resources.Load<AudioClip>("sounds/depleted");
+        sounds[2] = Resources.Load<AudioClip>("sounds/victory");
     }
 
     public static void PlaySound(GameSounds gameSound)

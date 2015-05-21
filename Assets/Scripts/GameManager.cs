@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour
     public void PlayerWins()
     {
         FindObjectOfType<GameplayUI>().SetGameMenuMode(GameMenuModes.success);
+        SoundManager.PlaySound(GameSounds.victory);
         hasSuccessAppeared = true;
     }
 
