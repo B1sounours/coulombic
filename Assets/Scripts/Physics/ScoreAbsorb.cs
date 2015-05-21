@@ -39,6 +39,7 @@ public class ScoreAbsorb : MonoBehaviour
         {
             if (child.GetComponent<Collider>() != null)
             {
+                child.layer = LayerMask.NameToLayer("Ignore Raycast");
                 ScoreAbsorb scoreAbsorb = child.AddComponent<ScoreAbsorb>();
                 scoreAbsorb.velocityMultiplier = velocityMultiplier;
                 scoreAbsorb.massMultiplier = massMultiplier;

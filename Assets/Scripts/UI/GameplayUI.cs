@@ -64,6 +64,7 @@ public class GameplayUI : MonoBehaviour
     public void SelectToolClick(int toolID)
     {
         SelectTool(toolID);
+        SoundManager.PlaySound(GameSounds.click);
         SetGameMenuMode(GameMenuModes.gameplay);
     }
 

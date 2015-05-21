@@ -26,6 +26,7 @@ public class ClickTool : MonoBehaviour
         }
     }
 
+
     private GameplayUI GetGameplayUI()
     {
         if (gameplayUI == null)
@@ -46,9 +47,11 @@ public class ClickTool : MonoBehaviour
             else if (!infiniteCharges && toolCharges[(int)tool] < 1)
             {
                 Debug.Log("prompt: tool is depleted");
+                SoundManager.PlaySound(GameSounds.depleted);
             }
             else
             {
+                SoundManager.PlaySound(GameSounds.click);
                 toolCharges[(int)tool]--;
 
                 if (tool == Tools.add)
