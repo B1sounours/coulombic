@@ -5,11 +5,21 @@ public class GameManager : MonoBehaviour
 {
     public bool startPaused = true;
     private bool isPaused = true;
+    public GameObject templeRegion;
 
     void Start()
     {
         StartUI();
         SetGamePause(startPaused);
+        MakeTemple();
+    }
+
+    private void MakeTemple()
+    {
+        GameObject prefab = Resources.Load<GameObject>("prefabs/temple");
+        GameObject temple = Instantiate(prefab);
+        temple.transform.parent = templeRegion.transform;
+        temple.transform.position = new Vector3(0, 0, 0);
     }
 
     private void StartUI()
