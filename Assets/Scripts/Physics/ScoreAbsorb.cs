@@ -12,8 +12,8 @@ public class ScoreAbsorb : MonoBehaviour
     public float baseValue = 1;
     public bool startVisible = false;
 
-    private float score = 0;
     private RegionManager regionManager;
+    private GameManager gameManager;
     private static GameObject particlesPrefab;
     private static AudioClip[] lightningSounds;
     private static GameObject particlesContainer;
@@ -52,16 +52,18 @@ public class ScoreAbsorb : MonoBehaviour
         }
     }
 
+    private GameManager GetGameManager()
+    {
+        if (gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
+        return gameManager;
+    }
+
     private GameObject GetParticlesContainer()
     {
         if (particlesContainer == null)
             particlesContainer = new GameObject("particles container");
         return particlesContainer;
-    }
-
-    public float GetScore()
-    {
-        return score;
     }
 
     private static AudioClip GetRandomLightningSound()
@@ -108,7 +110,8 @@ public class ScoreAbsorb : MonoBehaviour
                 points += co.charge * negativeChargeMultiplier;
         }
 
-        score += points;
+        if (GetGameManager() != null)
+            GetGameManager().AddScore(points);
     }
 
     private void MakeLightning(Vector3 position)

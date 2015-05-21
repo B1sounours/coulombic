@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public enum GameMenuModes
 {
-    gameplay, toolSelect, challengeInfo
+    gameplay, toolSelect, challengeInfo, success
 }
 
 public class GameplayUI : MonoBehaviour
@@ -12,12 +12,14 @@ public class GameplayUI : MonoBehaviour
     public Image selectedToolImage;
     public Text selectedToolCount;
 
-    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer;
+    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
+    private GameManager gameManager;
 
     private static Sprite[] toolSprites;
     private Tools selectedTool = Tools.add;
+
 
     void Start()
     {
@@ -62,9 +64,30 @@ public class GameplayUI : MonoBehaviour
         MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
         MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
         MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
+        MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
         challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
+    }
+
+    public void StayHereButtonClick()
+    {
+        SoundManager.PlaySound(GameSounds.click);
+        SetGameMenuMode(GameMenuModes.gameplay);
+    }
+
+    private GameManager GetGameManager()
+    {
+        if (gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
+        return gameManager;
+    }
+
+    public void NextLevelButtonClick()
+    {
+        SoundManager.PlaySound(GameSounds.click);
+        int levelIndex=GetGameManager().levelIndex+1;
+        Application.LoadLevel(LevelManager.GetSceneIndexFromLevelIndex(levelIndex));
     }
 
     public void ChallengeInfoButtonClick()

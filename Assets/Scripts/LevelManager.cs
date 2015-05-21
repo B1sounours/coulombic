@@ -4,16 +4,17 @@ using System.Collections.Generic;
 
 public struct Level
 {
-    public string title, goal,tip;
-    public Level(string title, string goal,string tip)
+    public string title, goal, tip;
+    public Level(string title, string goal, string tip)
     {
-        this.title=title;
+        this.title = title;
         this.goal = goal;
-        this.tip=tip;
+        this.tip = tip;
     }
 }
 
-public static class LevelManager {
+public static class LevelManager
+{
     private static bool isStarted = false;
     private static List<Level> levels;
 
@@ -33,6 +34,11 @@ public static class LevelManager {
         levels.Add(new Level("Charge Dancing",
             "Make all objects find their partner, and dance their way to victory.",
             "In this challenge, you'll need to add and remove electrons. The dancers on the left need to be the same, and the dancers on the right need to be the same."));
+    }
+
+    public static int GetSceneIndexFromLevelIndex(int levelIndex)
+    {
+        return levelIndex + 1;
     }
 
     public static Level GetLevel(int index)
