@@ -7,6 +7,13 @@ public class RegionManager : MonoBehaviour
     private List<ChargedObject> chargedObjects;
     private List<MovingChargedObject> movingChargedObjects;
     private bool isInitialized = false;
+    private GameManager gameManager;
+
+    void Start()
+    {
+        foreach (MovingChargedObject mco in FindObjectsOfType<MovingChargedObject>())
+            mco.UpdateSize();
+    }
 
     void Update()
     {
@@ -20,7 +27,7 @@ public class RegionManager : MonoBehaviour
 
     public static RegionManager GetMyRegionManager(GameObject childObject)
     {
-        RegionManager regionManager=null;
+        RegionManager regionManager = null;
         Transform transformParent = childObject.transform.parent;
         while (regionManager == null && transformParent != null)
         {
@@ -35,6 +42,13 @@ public class RegionManager : MonoBehaviour
         if (regionManager == null)
             Debug.LogError("ScoreWall must be the child of a RegionManager.");
         return regionManager;
+    }
+
+    private GameManager GetGameManager()
+    {
+        if (gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
+        return gameManager;
     }
 
     private bool AllChargedObjectsAreGenerated()
@@ -126,18 +140,20 @@ public class RegionManager : MonoBehaviour
             }
             else
             {
-                ApplyMagneticForce(mco);
+                if (!GetGameManager().GetIsPaused())
+                    ApplyMagneticForce(mco);
                 yield return new WaitForSeconds(GameSettings.magnetInterval);
             }
         }
     }
-
+    
     private void ApplyMagneticForce(MovingChargedObject mco)
     {
         Vector3 newForce = new Vector3(0, 0, 0);
+
         foreach (ChargedObject chargedObject in chargedObjects)
         {
-            if (mco.GetChargedObject() == chargedObject)
+            if (mco.GetChargedObject() == chargedObject || chargedObject.ignoreOtherMovingChargedObjects)
                 continue;
 
             float distance = Vector3.Distance(mco.transform.position, chargedObject.gameObject.transform.position);

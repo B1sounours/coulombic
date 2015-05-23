@@ -35,19 +35,22 @@ public class ScoreAbsorb : MonoBehaviour
 
     private void SetAllChildren()
     {
-        foreach (GameObject child in ParentChildFunctions.GetAllChildren(gameObject, false))
+        foreach (GameObject child in ParentChildFunctions.GetAllChildren(gameObject, true))
         {
             if (child.GetComponent<Collider>() != null)
             {
                 child.layer = LayerMask.NameToLayer("Ignore Raycast");
-                ScoreAbsorb scoreAbsorb = child.AddComponent<ScoreAbsorb>();
-                scoreAbsorb.velocityMultiplier = velocityMultiplier;
-                scoreAbsorb.massMultiplier = massMultiplier;
-                scoreAbsorb.chargeMultiplier = chargeMultiplier;
-                scoreAbsorb.positiveChargeMultiplier = positiveChargeMultiplier;
-                scoreAbsorb.negativeChargeMultiplier = negativeChargeMultiplier;
-                scoreAbsorb.baseValue = baseValue;
-                scoreAbsorb.startVisible = startVisible;
+                if (child.GetComponent<ScoreAbsorb>() == null)
+                {
+                    ScoreAbsorb scoreAbsorb = child.AddComponent<ScoreAbsorb>();
+                    scoreAbsorb.velocityMultiplier = velocityMultiplier;
+                    scoreAbsorb.massMultiplier = massMultiplier;
+                    scoreAbsorb.chargeMultiplier = chargeMultiplier;
+                    scoreAbsorb.positiveChargeMultiplier = positiveChargeMultiplier;
+                    scoreAbsorb.negativeChargeMultiplier = negativeChargeMultiplier;
+                    scoreAbsorb.baseValue = baseValue;
+                    scoreAbsorb.startVisible = startVisible;
+                }
             }
         }
     }

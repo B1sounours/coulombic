@@ -17,7 +17,6 @@ public class MovingChargedObject : MonoBehaviour
 
         GetRigidbody().velocity = startVelocity;
         GetRigidbody().mass = mass;
-        UpdateSize();
     }
 
     public void UpdateSize()

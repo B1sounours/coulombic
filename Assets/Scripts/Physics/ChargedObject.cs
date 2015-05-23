@@ -7,6 +7,7 @@ public class ChargedObject : MonoBehaviour
     public float charge = 1;
     public float reverseChargeTimer = 0;
     public bool isLocked = false;
+    public bool ignoreOtherMovingChargedObjects = false;
     private float reverseChargeTimeCount = 0;
 
     private GameObject canvasGameObject;

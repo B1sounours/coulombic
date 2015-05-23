@@ -11,6 +11,7 @@ public class GameplayUI : MonoBehaviour
 {
     public Image selectedToolImage;
     public Text selectedToolCount;
+    public Toggle showTipsToggle;
 
     public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer;
 
@@ -23,8 +24,11 @@ public class GameplayUI : MonoBehaviour
 
     void Start()
     {
-        SetGameMenuMode(GameMenuModes.challengeInfo);
-        SelectTool(0);
+        if (GameSettings.GetShowTip(GetGameManager().levelIndex))
+            SetGameMenuMode(GameMenuModes.challengeInfo);
+        else
+            SetGameMenuMode(GameMenuModes.gameplay);
+        SelectAnyAvailableTool();
     }
 
     void Update()
@@ -48,6 +52,22 @@ public class GameplayUI : MonoBehaviour
             Application.LoadLevel("Main Menu");
     }
 
+    private void SelectAnyAvailableTool()
+    {
+        ClickTool clickTool = FindObjectOfType<ClickTool>();
+        for (int i = 0; i < clickTool.toolCharges.Length; i++)
+            if (clickTool.toolCharges[i] > 0)
+            {
+                SelectTool(i);
+                break;
+            }
+    }
+
+    public void HideTipsButtonClick()
+    {
+        GameSettings.SetShowTip(GetGameManager().levelIndex, !showTipsToggle.isOn);
+    }
+
     public GameMenuModes GetGameMenuMode()
     {
         return gameMenuMode;
@@ -65,6 +85,7 @@ public class GameplayUI : MonoBehaviour
         MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
         MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
         MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
+        showTipsToggle.isOn = GameSettings.GetShowTip(GetGameManager().levelIndex);
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
         challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
@@ -86,7 +107,7 @@ public class GameplayUI : MonoBehaviour
     public void NextLevelButtonClick()
     {
         SoundManager.PlaySound(GameSounds.click);
-        int levelIndex=GetGameManager().levelIndex+1;
+        int levelIndex = GetGameManager().levelIndex + 1;
         Application.LoadLevel(LevelManager.GetSceneIndexFromLevelIndex(levelIndex));
     }
 
@@ -114,7 +135,7 @@ public class GameplayUI : MonoBehaviour
         int toolID = (int)selectedTool;
         selectedToolImage.sprite = GetToolSprite(toolID);
         int count = FindObjectOfType<ClickTool>().toolCharges[toolID];
-        selectedToolCount.text = ToolSelectUI.GetCountText(count,FindObjectOfType<ClickTool>());
+        selectedToolCount.text = ToolSelectUI.GetCountText(count, FindObjectOfType<ClickTool>());
     }
 
     private Sprite GetToolSprite(int toolID)
