@@ -11,7 +11,7 @@ public class GameplayUI : MonoBehaviour
 {
     public Image selectedToolImage;
     public Text selectedToolCount;
-    public Toggle showTipsToggle;
+    public Toggle hideTipsToggle;
 
     public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer;
 
@@ -65,7 +65,7 @@ public class GameplayUI : MonoBehaviour
 
     public void HideTipsButtonClick()
     {
-        GameSettings.SetShowTip(GetGameManager().levelIndex, !showTipsToggle.isOn);
+        GameSettings.SetShowTip(GetGameManager().levelIndex, !hideTipsToggle.isOn);
     }
 
     public GameMenuModes GetGameMenuMode()
@@ -85,7 +85,7 @@ public class GameplayUI : MonoBehaviour
         MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
         MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
         MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
-        showTipsToggle.isOn = GameSettings.GetShowTip(GetGameManager().levelIndex);
+        hideTipsToggle.isOn = !GameSettings.GetShowTip(GetGameManager().levelIndex);
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
         challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
