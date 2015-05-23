@@ -38,6 +38,9 @@ public static class LevelManager
         levels.Add(new Level("Tug of War",
             "Pull the big sphere so it falls to the left, not the right.",
             "You can now double the charge on objects. Should you double each cube once, or double one cube three times? And which cube? Know this: if a charge is twice as far away, it has one fourth the pull. If it's three times farther away, it has one ninth the pull. Or if it is R times farther away, it has 1/(R*R) the pull."));
+        levels.Add(new Level("Ion Scoop",
+            "Pull in as many particles as possible into the big sphere.",
+            "You won't be able to catch them all, but how can you catch the most?"));
     }
 
     public static int GetSceneIndexFromLevelIndex(int levelIndex)

@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public GameObject templeRegion;
     public int levelIndex = 0;
     public float startingScore = 0;
+    public bool templeHasScoreAbsorb = false;
     private float score = 0;
     private float elapsedTime = 0;
     private bool hasSuccessAppeared = false;
@@ -42,6 +43,9 @@ public class GameManager : MonoBehaviour
     {
         GameObject prefab = Resources.Load<GameObject>("prefabs/temple");
         GameObject temple = Instantiate(prefab);
+        ScoreAbsorb sa= temple.AddComponent<ScoreAbsorb>();
+        sa.baseValue = 0;
+        sa.startVisible = true;
         temple.transform.parent = templeRegion.transform;
         temple.transform.position = new Vector3(0, 0, 0);
     }
@@ -76,7 +80,7 @@ public class GameManager : MonoBehaviour
 
     public bool PlayerHasWon()
     {
-        return elapsedTime > successCondition.time && score > successCondition.minScore;
+        return elapsedTime > successCondition.time && score >= successCondition.minScore;
     }
 
     public void PlayerWins()
