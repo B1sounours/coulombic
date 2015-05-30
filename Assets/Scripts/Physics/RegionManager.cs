@@ -19,15 +19,14 @@ public class RegionManager : MonoBehaviour
 
     void Update()
     {
-        if (!hasAppliedStartVelocity && (!GetGameManager().GetIsPaused() || isSplashMenu))
-            ApplyStartVelocities();
-
         if (!isInitialized && AllChargedObjectsAreGenerated())
         {
             FindChargedObjects();
             StartAllCoroutines();
             isInitialized = true;
         }
+        if (!hasAppliedStartVelocity && (isSplashMenu || !GetGameManager().GetIsPaused()))
+            ApplyStartVelocities();
     }
 
     private void ApplyStartVelocities()

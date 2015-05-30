@@ -19,6 +19,7 @@ public class MainMenu : MonoBehaviour
         SetUIVisibility(puzzleGameObject, false);
         SetUIVisibility(sandboxGameObject, false);
         SetUIVisibility(creditsGameObject, false);
+        SetupPuzzleSelectListeners();
     }
 
     private void SetMenuMode(MenuModes newMenuMode)
@@ -27,6 +28,40 @@ public class MainMenu : MonoBehaviour
         SetUIVisibility(puzzleGameObject, menuMode == MenuModes.puzzle);
         SetUIVisibility(sandboxGameObject, menuMode == MenuModes.sandbox);
         SetUIVisibility(creditsGameObject, menuMode == MenuModes.credits);
+        if (newMenuMode == MenuModes.puzzle)
+            UpdatePuzzleSelectAppearance();
+    }
+
+    private void SetupPuzzleSelectListeners()
+    {
+        int levelIndex = 0;
+        foreach (GameObject child in ParentChildFunctions.GetAllChildren(puzzleGameObject))
+        {
+            Button button = child.GetComponent<Button>();
+            if (button == null)
+                continue;
+            button.onClick.RemoveAllListeners();
+            int notSureWhyThisIsNecessary = levelIndex;
+            button.onClick.AddListener(() =>
+            {
+                //as you can see here, C# is a very pythonic language.
+                ChoosePuzzleClick(notSureWhyThisIsNecessary);
+            });
+            levelIndex++;
+        }
+    }
+
+    private void UpdatePuzzleSelectAppearance()
+    {
+        int levelIndex = 0;
+        foreach (GameObject child in ParentChildFunctions.GetAllChildren(puzzleGameObject))
+        {
+            PuzzleButtonUI pb = child.GetComponent<PuzzleButtonUI>();
+            if (pb == null)
+                continue;
+            pb.UpdateAppearance(levelIndex);
+            levelIndex++;
+        }
     }
 
     public void PuzzleClick()
@@ -44,9 +79,11 @@ public class MainMenu : MonoBehaviour
         SetMenuMode(MenuModes.credits);
     }
 
-    public void ChoosePuzzleClick(int levelID)
+    public void ChoosePuzzleClick(int levelIndex)
     {
-        Application.LoadLevel(levelID);
+        Debug.Log("ChoosePuzzleClick '" + levelIndex + "'");
+        int sceneIndex = LevelManager.GetSceneIndexFromLevelIndex(levelIndex);
+        Application.LoadLevel(sceneIndex);
     }
 
     public void ExitClick()
