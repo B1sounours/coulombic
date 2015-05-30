@@ -20,6 +20,7 @@ public class MainMenu : MonoBehaviour
         SetUIVisibility(sandboxGameObject, false);
         SetUIVisibility(creditsGameObject, false);
         SetupPuzzleSelectListeners();
+        GameSettings.GetPlayerProfile();
     }
 
     private void SetMenuMode(MenuModes newMenuMode)

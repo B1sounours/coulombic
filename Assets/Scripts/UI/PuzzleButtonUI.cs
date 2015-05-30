@@ -12,12 +12,13 @@ public class PuzzleButtonUI : MonoBehaviour
         Level level = LevelManager.GetLevel(levelIndex);
         if (level.exists)
         {
-            bool isCompleted = levelIndex % 3 == 0;
-            int score = 100 + levelIndex;
+            PlayerProfile pp = GameSettings.GetPlayerProfile();
+            bool isWin = pp.GetWin(levelIndex) ;
+            float score = pp.GetScore(levelIndex);
 
             this.puzzleTitle.text = level.title;
-            completionCheck.enabled = isCompleted;
-            bestScore.text = isCompleted ? "best: " + score : "";
+            completionCheck.enabled = isWin;
+            bestScore.text = isWin && score>0 ? "best: " + score.ToString("0") : "";
         }
         else
         {

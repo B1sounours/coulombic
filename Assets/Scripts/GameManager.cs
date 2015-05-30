@@ -113,6 +113,8 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<GameplayUI>().SetGameMenuMode(GameMenuModes.success);
         SoundManager.PlaySound(GameSounds.victory);
         hasSuccessAppeared = true;
+        SaveScore();
+        GameSettings.GetPlayerProfile().SetWin(levelIndex,true);
     }
 
     public void PlayerLoses()
@@ -134,6 +136,13 @@ public class GameManager : MonoBehaviour
         return mustSeeObjectRenderer;
     }
 
+    public void SaveScore()
+    {
+        PlayerProfile pp = GameSettings.GetPlayerProfile();
+        if (pp.GetScore(levelIndex) < score)
+            pp.SetScore(levelIndex, score);
+    }
+
     void Update()
     {
         if (!isPaused)
@@ -145,7 +154,7 @@ public class GameManager : MonoBehaviour
                 PlayerLoses();
         }
 
-        if (successCondition.mustSeeObject!=null && GetMustSeeObjectRenderer().isVisible)
+        if (successCondition.mustSeeObject != null && GetMustSeeObjectRenderer().isVisible)
             mustSeeObjectTimer += Time.deltaTime;
     }
 }

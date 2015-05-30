@@ -13,12 +13,21 @@ public static class GameSettings
     private static bool[] showTips;
 
     private static bool isStarted = false;
+    private static PlayerProfile playerProfile;
+
     public static bool GetShowTip(int levelIndex)
     {
         StartIfNotStarted();
         if (levelIndex >= showTips.Length)
             Debug.LogError("GetShowTip levelIndex=" + levelIndex + " showTips.length=" + showTips.Length);
         return showTips[levelIndex];
+    }
+
+    public static PlayerProfile GetPlayerProfile()
+    {
+        if (playerProfile == null)
+            playerProfile = new PlayerProfile();
+        return playerProfile;
     }
 
     public static void SetShowTip(int levelIndex, bool newValue)

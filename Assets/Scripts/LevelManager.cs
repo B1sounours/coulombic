@@ -54,6 +54,9 @@ public static class LevelManager
             "Make all objects find their partner, and dance their way to victory.",
             "In this challenge, you'll need to add and remove electrons. The dancers on the left need to be the same, and the dancers on the right need to be the same.");
 
+        AddLevel("Better Bonds",
+            "What do you think will happen?",
+            "This world has many weakly charged objects, some strongly charged objects, and one very strongly charged object. What will happen when you press go? Why do some objects stick together, but later decide not to? In this level you can also make any changes you like. Just watch closely!");
         AddLevel("Tug of War",
             "Pull the big sphere so it falls to the left, not the right.",
             "You can now double the charge on objects. Should you double each cube once, or double one cube three times? And which cube? Know this: if a charge is twice as far away, it has one fourth the pull. If it's three times farther away, it has one ninth the pull. Or if it is R times farther away, it has 1/(R*R) the pull.");

@@ -49,12 +49,19 @@ public class GameplayUI : MonoBehaviour
             SetGameMenuMode(gameMenuMode == GameMenuModes.gameplay ? GameMenuModes.challengeInfo : GameMenuModes.gameplay);
 
         if (Input.GetKeyDown(KeyCode.M))
-            Application.LoadLevel("Main Menu");
+            GotoMainMenu();
     }
 
     private void RestartLevel()
     {
+        gameManager.SaveScore();
         Application.LoadLevel(Application.loadedLevel);
+    }
+
+    private void GotoMainMenu()
+    {
+        gameManager.SaveScore();
+        Application.LoadLevel("Main Menu");
     }
 
     private void SelectAnyAvailableTool()
