@@ -6,24 +6,48 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class PlayerProfile
 {
+    //this contains, saves, and loads scores and settings that can be changed by the player.
     [System.Serializable]
     private class PlayerProfileData
     {
         public bool[] levelWins;
         public float[] levelScores;
+        public bool[] showTips;
 
         public PlayerProfileData()
         {
             int levelCount = LevelManager.GetLevelCount();
             levelWins = new bool[levelCount];
             levelScores = new float[levelCount];
+            showTips = new bool[levelCount];
+            for (int i = 0; i < levelCount; i++)
+                showTips[i] = true;
         }
     }
     private PlayerProfileData playerProfileData;
+    private static PlayerProfile playerProfile;
 
     public PlayerProfile()
     {
         Load();
+    }
+
+    public void ResetProfile()
+    {
+        playerProfileData = new PlayerProfileData();
+        playerProfile.Save();
+    }
+
+    public static PlayerProfile GetPlayerProfile()
+    {
+        if (playerProfile == null)
+            playerProfile = new PlayerProfile();
+        return playerProfile;
+    }
+
+    public bool GetShowTip(int levelIndex)
+    {
+        return playerProfileData.showTips[levelIndex];
     }
 
     public bool GetWin(int levelIndex)
@@ -34,6 +58,12 @@ public class PlayerProfile
     public float GetScore(int levelIndex)
     {
         return playerProfileData.levelScores[levelIndex];
+    }
+
+    public void SetShowTip(int levelIndex, bool showTip)
+    {
+        playerProfileData.showTips[levelIndex] = showTip;
+        Save();
     }
 
     public void SetWin(int levelIndex, bool isWin)

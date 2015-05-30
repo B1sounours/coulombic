@@ -11,6 +11,7 @@ public class ScoreAbsorb : MonoBehaviour
     public float negativeChargeMultiplier = 0;
     public float baseValue = 1;
     public bool startVisible = false;
+    public bool ignoreRaycast = true;
 
     private RegionManager regionManager;
     private GameManager gameManager;
@@ -39,7 +40,8 @@ public class ScoreAbsorb : MonoBehaviour
         {
             if (child.GetComponent<Collider>() != null)
             {
-                child.layer = LayerMask.NameToLayer("Ignore Raycast");
+                if (ignoreRaycast)
+                    child.layer = LayerMask.NameToLayer("Ignore Raycast");
                 if (child.GetComponent<ScoreAbsorb>() == null)
                 {
                     ScoreAbsorb scoreAbsorb = child.AddComponent<ScoreAbsorb>();

@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
         SoundManager.PlaySound(GameSounds.victory);
         hasSuccessAppeared = true;
         SaveScore();
-        GameSettings.GetPlayerProfile().SetWin(levelIndex,true);
+        PlayerProfile.GetPlayerProfile().SetWin(levelIndex,true);
     }
 
     public void PlayerLoses()
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
 
     public void SaveScore()
     {
-        PlayerProfile pp = GameSettings.GetPlayerProfile();
+        PlayerProfile pp = PlayerProfile.GetPlayerProfile();
         if (pp.GetScore(levelIndex) < score)
             pp.SetScore(levelIndex, score);
     }

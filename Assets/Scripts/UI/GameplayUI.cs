@@ -24,7 +24,7 @@ public class GameplayUI : MonoBehaviour
 
     void Start()
     {
-        if (GameSettings.GetShowTip(GetGameManager().levelIndex))
+        if (PlayerProfile.GetPlayerProfile().GetShowTip(GetGameManager().levelIndex))
             SetGameMenuMode(GameMenuModes.challengeInfo);
         else
             SetGameMenuMode(GameMenuModes.gameplay);
@@ -77,7 +77,9 @@ public class GameplayUI : MonoBehaviour
 
     public void HideTipsButtonClick()
     {
-        GameSettings.SetShowTip(GetGameManager().levelIndex, !hideTipsToggle.isOn);
+        PlayerProfile pp = PlayerProfile.GetPlayerProfile();
+        int levelIndex = GetGameManager().levelIndex;
+        pp.SetShowTip(levelIndex,!hideTipsToggle.isOn);
     }
 
     public GameMenuModes GetGameMenuMode()
@@ -92,6 +94,8 @@ public class GameplayUI : MonoBehaviour
 
     public void SetGameMenuMode(GameMenuModes newGameMenuMode)
     {
+        int levelIndex = GetGameManager().levelIndex;
+
         gameMenuMode = newGameMenuMode;
         MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
         MainMenu.SetUIVisibility(selectedToolContainer, ShouldShowToolCharges());
@@ -100,7 +104,7 @@ public class GameplayUI : MonoBehaviour
         MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
         MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
         MainMenu.SetUIVisibility(failContainer, gameMenuMode == GameMenuModes.fail);
-        hideTipsToggle.isOn = !GameSettings.GetShowTip(GetGameManager().levelIndex);
+        hideTipsToggle.isOn = !PlayerProfile.GetPlayerProfile().GetShowTip(levelIndex);
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
         challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;

@@ -12,7 +12,7 @@ public class PuzzleButtonUI : MonoBehaviour
         Level level = LevelManager.GetLevel(levelIndex);
         if (level.exists)
         {
-            PlayerProfile pp = GameSettings.GetPlayerProfile();
+            PlayerProfile pp = PlayerProfile.GetPlayerProfile();
             bool isWin = pp.GetWin(levelIndex) ;
             float score = pp.GetScore(levelIndex);
 
