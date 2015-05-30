@@ -49,7 +49,7 @@ public static class LevelManager
             "In this challenge, all the objects have the same charge. One! Since they're the same, they push away from each other. But if you left click on them, you can remove electrons and that changes their charge.");
         AddLevel("Likes Repel",
             "Make the objects fly apart as fast as possible.",
-            "In this challenge, you can add OR remove electrons to change the charge. And the cube will never move. What's the best way to make the objects fly apart the fastest? Your score adds up their speed.");
+            "In this challenge, you can add OR remove electrons to change the charge. What's the best way to make the objects fly apart the fastest? Your score will be higher if they move faster. Press 'Q' to select a tool.");
         AddLevel("Charge Dancing",
             "Make all objects find their partner, and dance their way to victory.",
             "In this challenge, you'll need to add and remove electrons. The dancers on the left need to be the same, and the dancers on the right need to be the same.");
