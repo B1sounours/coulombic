@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public enum GameMenuModes
 {
-    gameplay, toolSelect, challengeInfo, success
+    gameplay, toolSelect, challengeInfo, success, fail
 }
 
 public class GameplayUI : MonoBehaviour
@@ -13,7 +13,7 @@ public class GameplayUI : MonoBehaviour
     public Text selectedToolCount;
     public Toggle hideTipsToggle;
 
-    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer;
+    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer,failContainer;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
     private GameManager gameManager;
@@ -43,13 +43,18 @@ public class GameplayUI : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.R))
-            Application.LoadLevel(Application.loadedLevel);
+            RestartLevel();
 
         if (Input.GetKeyDown(KeyCode.C))
             SetGameMenuMode(gameMenuMode == GameMenuModes.gameplay ? GameMenuModes.challengeInfo : GameMenuModes.gameplay);
 
         if (Input.GetKeyDown(KeyCode.M))
             Application.LoadLevel("Main Menu");
+    }
+
+    private void RestartLevel()
+    {
+        Application.LoadLevel(Application.loadedLevel);
     }
 
     private void SelectAnyAvailableTool()
@@ -85,6 +90,7 @@ public class GameplayUI : MonoBehaviour
         MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
         MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
         MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
+        MainMenu.SetUIVisibility(failContainer, gameMenuMode == GameMenuModes.fail);
         hideTipsToggle.isOn = !GameSettings.GetShowTip(GetGameManager().levelIndex);
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
         challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
@@ -109,6 +115,12 @@ public class GameplayUI : MonoBehaviour
         SoundManager.PlaySound(GameSounds.click);
         int levelIndex = GetGameManager().levelIndex + 1;
         Application.LoadLevel(LevelManager.GetSceneIndexFromLevelIndex(levelIndex));
+    }
+
+    public void RestartLevelButtonClick()
+    {
+        SoundManager.PlaySound(GameSounds.click);
+        RestartLevel();
     }
 
     public void ChallengeInfoButtonClick()

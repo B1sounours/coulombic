@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class RegionManager : MonoBehaviour
 {
+    public bool isSplashMenu = false;
     private List<ChargedObject> chargedObjects;
     private List<MovingChargedObject> movingChargedObjects;
     private bool isInitialized = false;
@@ -140,7 +141,7 @@ public class RegionManager : MonoBehaviour
             }
             else
             {
-                if (!GetGameManager().GetIsPaused())
+                if (isSplashMenu||!GetGameManager().GetIsPaused())
                     ApplyMagneticForce(mco);
                 yield return new WaitForSeconds(GameSettings.magnetInterval);
             }

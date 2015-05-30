@@ -11,13 +11,14 @@ public class GameManager : MonoBehaviour
     public bool templeHasScoreAbsorb = false;
     private float score = 0;
     private float elapsedTime = 0;
-    private bool hasSuccessAppeared = false;
+    private bool hasSuccessAppeared = false, hasFailureAppeared=false;
 
     [System.Serializable]
     public class VictoryCondition
     {
         public float time = 5;
         public float minScore = 0;
+        public float failTime = 15;
     }
     public VictoryCondition successCondition;
 
@@ -90,6 +91,18 @@ public class GameManager : MonoBehaviour
         hasSuccessAppeared = true;
     }
 
+    public void PlayerLoses()
+    {
+        FindObjectOfType<GameplayUI>().SetGameMenuMode(GameMenuModes.fail);
+        SoundManager.PlaySound(GameSounds.fail);
+        hasFailureAppeared = true;
+    }
+
+    public bool PlayerHasLost()
+    {
+        return elapsedTime > successCondition.failTime && !PlayerHasWon();
+    }
+
     void Update()
     {
         if (!isPaused)
@@ -97,6 +110,8 @@ public class GameManager : MonoBehaviour
             elapsedTime += Time.deltaTime;
             if (!hasSuccessAppeared && PlayerHasWon())
                 PlayerWins();
+            if (!hasFailureAppeared && PlayerHasLost())
+                PlayerLoses();
         }
     }
 }

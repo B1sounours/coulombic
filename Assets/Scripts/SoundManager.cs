@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum GameSounds
 {
-    click = 0, depleted = 1, victory=2
+    click = 0, depleted = 1, victory = 2, fail = 3
 }
 
 public static class SoundManager
 {
-    private static AudioClip[] sounds;
+    private static List<AudioClip> sounds;
     private static bool isInitialized = false;
 
     private static void Initialize()
     {
         isInitialized = true;
-        sounds = new AudioClip[3];
-        sounds[0] = Resources.Load<AudioClip>("sounds/click");
-        sounds[1] = Resources.Load<AudioClip>("sounds/depleted");
-        sounds[2] = Resources.Load<AudioClip>("sounds/victory");
+        sounds = new List<AudioClip>();
+
+        sounds.Add(Resources.Load<AudioClip>("sounds/click"));
+        sounds.Add(Resources.Load<AudioClip>("sounds/depleted"));
+        sounds.Add(Resources.Load<AudioClip>("sounds/victory"));
+        sounds.Add(Resources.Load<AudioClip>("sounds/fail"));
     }
 
     public static void PlaySound(GameSounds gameSound)
@@ -26,7 +29,7 @@ public static class SoundManager
         PlaySound(gameSound, player.transform.position);
     }
 
-    public static void PlaySound(GameSounds gameSound,Vector3 position)
+    public static void PlaySound(GameSounds gameSound, Vector3 position)
     {
         if (!isInitialized)
             Initialize();
