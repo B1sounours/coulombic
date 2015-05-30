@@ -26,6 +26,13 @@ public class ClickTool : MonoBehaviour
         }
     }
 
+    public bool HasAtLeastOneToolCharge()
+    {
+        for (int i = 0; i < toolCharges.Length; i++)
+            if (toolCharges[i] > 0)
+                return true;
+        return false;
+    }
 
     private GameplayUI GetGameplayUI()
     {

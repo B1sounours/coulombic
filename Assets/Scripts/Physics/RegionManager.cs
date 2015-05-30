@@ -9,6 +9,7 @@ public class RegionManager : MonoBehaviour
     private List<MovingChargedObject> movingChargedObjects;
     private bool isInitialized = false;
     private GameManager gameManager;
+    private bool hasAppliedStartVelocity = false;
 
     void Start()
     {
@@ -18,11 +19,24 @@ public class RegionManager : MonoBehaviour
 
     void Update()
     {
+        if (!hasAppliedStartVelocity && !GetGameManager().GetIsPaused())
+            ApplyStartVelocities();
+
         if (!isInitialized && AllChargedObjectsAreGenerated())
         {
             FindChargedObjects();
             StartAllCoroutines();
             isInitialized = true;
+        }
+    }
+
+    private void ApplyStartVelocities()
+    {
+        hasAppliedStartVelocity = true;
+        foreach (MovingChargedObject mco in movingChargedObjects)
+        {
+            if (mco.startVelocity.sqrMagnitude > 0)
+                mco.gameObject.GetComponent<Rigidbody>().velocity = mco.startVelocity;
         }
     }
 

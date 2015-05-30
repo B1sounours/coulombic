@@ -13,7 +13,7 @@ public class GameplayUI : MonoBehaviour
     public Text selectedToolCount;
     public Toggle hideTipsToggle;
 
-    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer,failContainer;
+    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer, failContainer, selectedToolContainer, scoreContainer;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
     private GameManager gameManager;
@@ -87,6 +87,8 @@ public class GameplayUI : MonoBehaviour
     {
         gameMenuMode = newGameMenuMode;
         MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
+        MainMenu.SetUIVisibility(selectedToolContainer, ShouldShowToolCharges());
+        MainMenu.SetUIVisibility(scoreContainer, ShouldShowScore());
         MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
         MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
         MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
@@ -95,6 +97,17 @@ public class GameplayUI : MonoBehaviour
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
         challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
+    }
+
+    private bool ShouldShowScore()
+    {
+        return GetGameManager().successCondition.minScore>0 && gameMenuMode == GameMenuModes.gameplay;
+    }
+
+    private bool ShouldShowToolCharges()
+    {
+        ClickTool clickTool = FindObjectOfType<ClickTool>();
+        return clickTool.HasAtLeastOneToolCharge() && gameMenuMode == GameMenuModes.gameplay;
     }
 
     public void StayHereButtonClick()
@@ -146,7 +159,9 @@ public class GameplayUI : MonoBehaviour
     {
         int toolID = (int)selectedTool;
         selectedToolImage.sprite = GetToolSprite(toolID);
-        int count = FindObjectOfType<ClickTool>().toolCharges[toolID];
+
+        ClickTool clickTool = FindObjectOfType<ClickTool>();
+        int count = clickTool.toolCharges[toolID];
         selectedToolCount.text = ToolSelectUI.GetCountText(count, FindObjectOfType<ClickTool>());
     }
 

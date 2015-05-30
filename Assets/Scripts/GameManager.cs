@@ -11,7 +11,12 @@ public class GameManager : MonoBehaviour
     public bool templeHasScoreAbsorb = false;
     private float score = 0;
     private float elapsedTime = 0;
-    private bool hasSuccessAppeared = false, hasFailureAppeared=false;
+    private bool hasSuccessAppeared = false, hasFailureAppeared = false;
+
+    private float mustSeeObjectTimer = 0;
+    private Renderer mustSeeObjectRenderer;
+    private Vector3 mustMoveAroundStartPosition;
+    private GameObject player;
 
     [System.Serializable]
     public class VictoryCondition
@@ -19,6 +24,8 @@ public class GameManager : MonoBehaviour
         public float time = 5;
         public float minScore = 0;
         public float failTime = 15;
+        public GameObject mustSeeObject;
+        public bool mustMoveAround = false;
     }
     public VictoryCondition successCondition;
 
@@ -28,6 +35,7 @@ public class GameManager : MonoBehaviour
         SetGamePause(startPaused);
         MakeTemple();
         score = startingScore;
+        mustMoveAroundStartPosition = GetPlayer().transform.position;
     }
 
     public float GetScore()
@@ -44,7 +52,7 @@ public class GameManager : MonoBehaviour
     {
         GameObject prefab = Resources.Load<GameObject>("prefabs/temple");
         GameObject temple = Instantiate(prefab);
-        ScoreAbsorb sa= temple.AddComponent<ScoreAbsorb>();
+        ScoreAbsorb sa = temple.AddComponent<ScoreAbsorb>();
         sa.baseValue = 0;
         sa.startVisible = true;
         temple.transform.parent = templeRegion.transform;
@@ -79,8 +87,24 @@ public class GameManager : MonoBehaviour
         return isPaused;
     }
 
+    private GameObject GetPlayer()
+    {
+        if (player == null)
+            player = FindObjectOfType<FlightController>().gameObject;
+        return player;
+    }
+
+    private bool PlayerHasMovedSignificantly()
+    {
+        return Vector3.Distance(mustMoveAroundStartPosition, GetPlayer().transform.position) > 10;
+    }
+
     public bool PlayerHasWon()
     {
+        if (successCondition.mustSeeObject != null && mustSeeObjectTimer < 1)
+            return false;
+        if (successCondition.mustMoveAround && !PlayerHasMovedSignificantly())
+            return false;
         return elapsedTime > successCondition.time && score >= successCondition.minScore;
     }
 
@@ -100,7 +124,14 @@ public class GameManager : MonoBehaviour
 
     public bool PlayerHasLost()
     {
-        return elapsedTime > successCondition.failTime && !PlayerHasWon();
+        return successCondition.failTime > 0 && elapsedTime > successCondition.failTime && !PlayerHasWon();
+    }
+
+    private Renderer GetMustSeeObjectRenderer()
+    {
+        if (mustSeeObjectRenderer == null)
+            mustSeeObjectRenderer = successCondition.mustSeeObject.GetComponent<Renderer>();
+        return mustSeeObjectRenderer;
     }
 
     void Update()
@@ -113,5 +144,8 @@ public class GameManager : MonoBehaviour
             if (!hasFailureAppeared && PlayerHasLost())
                 PlayerLoses();
         }
+
+        if (successCondition.mustSeeObject!=null && GetMustSeeObjectRenderer().isVisible)
+            mustSeeObjectTimer += Time.deltaTime;
     }
 }

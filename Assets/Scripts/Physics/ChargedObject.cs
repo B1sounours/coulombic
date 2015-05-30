@@ -7,6 +7,7 @@ public class ChargedObject : MonoBehaviour
     public float charge = 1;
     public float reverseChargeTimer = 0;
     public bool isLocked = false;
+    public bool showCharge = true;
     public bool ignoreOtherMovingChargedObjects = false;
     private float reverseChargeTimeCount = 0;
 
@@ -51,8 +52,10 @@ public class ChargedObject : MonoBehaviour
 
     private void UpdateCanvas()
     {
-        ChargedObjectUI chargedObjectUI=canvasGameObject.GetComponent<ChargedObjectUI>();
-        chargedObjectUI.UpdateAppearance(charge,isLocked);
+        ChargedObjectUI chargedObjectUI = canvasGameObject.GetComponent<ChargedObjectUI>();
+        chargedObjectUI.UpdateAppearance(charge, isLocked);
+        if (!showCharge)
+            MainMenu.SetUIVisibility(canvasGameObject, false);
     }
 
     private GameObject GetCanvasPrefab()

@@ -25,6 +25,13 @@ public static class LevelManager
         isStarted = true;
 
         levels = new List<Level>();
+        levels.Add(new Level("Welcome!",
+            "What do you think will happen?",
+            "In this game, objects that are the same push each other apart. Objects that are different pull together. Have a look around. What do you think will happen to these objects when you turn on time? To turn on time, press 'G'."));
+        levels.Add(new Level("Looking Around",
+            "Turn around.",
+            "If you turn on time by pressing 'G' you'll notice all the objects coming towards you. Why is that? You need to move your mouse to look around. Then press 'G'."));
+
         levels.Add(new Level("Opposites Attract",
             "Stop the objects from flying apart.",
             "In this challenge, all the objects have the same charge. One! Since they're the same, they push away from each other. But if you left click on them, you can remove electrons and that changes their charge."));
