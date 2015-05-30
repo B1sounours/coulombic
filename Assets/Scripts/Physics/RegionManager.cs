@@ -19,7 +19,7 @@ public class RegionManager : MonoBehaviour
 
     void Update()
     {
-        if (!hasAppliedStartVelocity && !GetGameManager().GetIsPaused())
+        if (!hasAppliedStartVelocity && (!GetGameManager().GetIsPaused() || isSplashMenu))
             ApplyStartVelocities();
 
         if (!isInitialized && AllChargedObjectsAreGenerated())
@@ -155,13 +155,13 @@ public class RegionManager : MonoBehaviour
             }
             else
             {
-                if (isSplashMenu||!GetGameManager().GetIsPaused())
+                if (isSplashMenu || !GetGameManager().GetIsPaused())
                     ApplyMagneticForce(mco);
                 yield return new WaitForSeconds(GameSettings.magnetInterval);
             }
         }
     }
-    
+
     private void ApplyMagneticForce(MovingChargedObject mco)
     {
         Vector3 newForce = new Vector3(0, 0, 0);
