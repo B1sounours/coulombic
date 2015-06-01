@@ -42,7 +42,7 @@ public static class LevelManager
             "If you turn on time by pressing 'G' you'll notice all the objects are coming towards you. Why is that? You need to move your mouse to look around. Then press 'G'.");
         AddLevel("Moving",
             "Move around.",
-            "If you press 'G', a few cool things will happen. But you won't see anything from here! To move around, press the keyboard keys 'W', 'A', 'S', and 'D'. Then press 'G' to turn on time.");
+            "If you press 'G', a few cool things will happen. But you won't see anything from here! To move around, press the keyboard keys 'WASD'. Then press 'G' to turn on time.");
 
         AddLevel("Opposites Attract",
             "Stop the objects from flying apart.",
