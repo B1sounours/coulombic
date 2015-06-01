@@ -13,7 +13,7 @@ public class GameplayUI : MonoBehaviour
     public Text selectedToolCount;
     public Toggle hideTipsToggle;
 
-    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer, failContainer, selectedToolContainer, scoreContainer;
+    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer, failContainer, selectedToolContainer, scoreContainer, sandboxHotkeyContainer;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
 
@@ -104,6 +104,7 @@ public class GameplayUI : MonoBehaviour
         MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
         MainMenu.SetUIVisibility(selectedToolContainer, ShouldShowToolCharges());
         MainMenu.SetUIVisibility(scoreContainer, ShouldShowScore());
+        MainMenu.SetUIVisibility(sandboxHotkeyContainer, ShouldShowSandboxHotkey());
         MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
         MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
         MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
@@ -116,6 +117,11 @@ public class GameplayUI : MonoBehaviour
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
         challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
+    }
+
+    private bool ShouldShowSandboxHotkey()
+    {
+        return GameManager.GetGameManager().isSandboxMode && gameMenuMode == GameMenuModes.gameplay;
     }
 
     private bool ShouldShowScore()
