@@ -73,6 +73,11 @@ public static class LevelManager
                 "Press 'X' to open the sandbox menu. If you press 'R' to reset, all objects and changes you made before pressing 'G' will go back to how they were when you made them. Also, resets will erase all changes you made after you turned time on.");
     }
 
+    public static bool IsValidLevelIndex(int levelIndex)
+    {
+        return levelIndex >= 0 && levelIndex < GetLevelCount();
+    }
+
     private static void AddLevel(string title, string goal, string tip)
     {
         if (levels == null)

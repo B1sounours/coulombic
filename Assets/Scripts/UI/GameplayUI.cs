@@ -111,7 +111,7 @@ public class GameplayUI : MonoBehaviour
 
         bool isSandbox = GameManager.GetGameManager().isSandboxMode;
         PlayerProfile pp = PlayerProfile.GetPlayerProfile();
-        hideTipsToggle.enabled = pp.GetShowTip(levelIndex, isSandbox);
+        hideTipsToggle.isOn = !pp.GetShowTip(levelIndex, isSandbox);
 
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
         challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();

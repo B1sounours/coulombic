@@ -93,9 +93,12 @@ public class MainMenu : MonoBehaviour
 
     public void ChoosePuzzleClick(int levelIndex)
     {
-        SoundManager.PlaySound(GameSounds.click);
-        int sceneIndex = LevelManager.GetSceneIndexFromLevelIndex(levelIndex);
-        Application.LoadLevel(sceneIndex);
+        if (LevelManager.IsValidLevelIndex(levelIndex))
+        {
+            SoundManager.PlaySound(GameSounds.click);
+            int sceneIndex = LevelManager.GetSceneIndexFromLevelIndex(levelIndex);
+            Application.LoadLevel(sceneIndex);
+        }
     }
 
     public void ExitClick()
