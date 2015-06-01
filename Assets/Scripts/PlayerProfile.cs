@@ -45,6 +45,19 @@ public class PlayerProfile
         return playerProfile;
     }
 
+    public bool IsSandboxUnlocked()
+    {
+        return AreAllLevelsComplete();
+    }
+
+    public bool AreAllLevelsComplete()
+    {
+        for (int i = 0; i < playerProfileData.levelWins.Length; i++)
+            if (!playerProfileData.levelWins[i])
+                return false;
+        return true;
+    }
+
     public bool GetShowTip(int levelIndex)
     {
         return playerProfileData.showTips[levelIndex];
