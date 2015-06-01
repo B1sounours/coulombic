@@ -13,6 +13,7 @@ public class PlayerProfile
         public bool[] levelWins;
         public float[] levelScores;
         public bool[] showTips;
+        public bool showSandboxTip = true;
 
         public PlayerProfileData()
         {
@@ -47,7 +48,7 @@ public class PlayerProfile
 
     public bool IsSandboxUnlocked()
     {
-        return AreAllLevelsComplete();
+        return true || AreAllLevelsComplete();
     }
 
     public bool AreAllLevelsComplete()
@@ -58,9 +59,9 @@ public class PlayerProfile
         return true;
     }
 
-    public bool GetShowTip(int levelIndex)
+    public bool GetShowTip(int levelIndex, bool isSandbox)
     {
-        return playerProfileData.showTips[levelIndex];
+        return isSandbox ? playerProfileData.showSandboxTip : playerProfileData.showTips[levelIndex];
     }
 
     public bool GetWin(int levelIndex)
@@ -73,9 +74,13 @@ public class PlayerProfile
         return playerProfileData.levelScores[levelIndex];
     }
 
-    public void SetShowTip(int levelIndex, bool showTip)
+    public void SetShowTip(int levelIndex, bool showTip, bool isSandbox)
     {
-        playerProfileData.showTips[levelIndex] = showTip;
+        if (isSandbox)
+            playerProfileData.showSandboxTip = showTip;
+        else
+            playerProfileData.showTips[levelIndex] = showTip;
+
         Save();
     }
 
@@ -98,6 +103,7 @@ public class PlayerProfile
 
     private void Save()
     {
+
         if (playerProfileData == null)
         {
             Debug.LogError("PlayerProfile tried to save a null playerProfileData.");

@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public int levelIndex = 0;
     public float startingScore = 0;
     public bool templeHasScoreAbsorb = false;
+    public bool isSandboxMode = false;
     private float score = 0;
     private float elapsedTime = 0;
     private bool hasSuccessAppeared = false, hasFailureAppeared = false;
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     private Renderer mustSeeObjectRenderer;
     private Vector3 mustMoveAroundStartPosition;
     private GameObject player;
+    private static GameManager gameManager;
 
     [System.Serializable]
     public class VictoryCondition
@@ -31,11 +33,19 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        gameManager = this;
         StartUI();
         SetGamePause(startPaused);
         MakeTemple();
         score = startingScore;
         mustMoveAroundStartPosition = GetPlayer().transform.position;
+    }
+
+    public static GameManager GetGameManager()
+    {
+        if (gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
+        return gameManager;
     }
 
     public float GetScore()
@@ -114,7 +124,7 @@ public class GameManager : MonoBehaviour
         SoundManager.PlaySound(GameSounds.victory);
         hasSuccessAppeared = true;
         SaveScore();
-        PlayerProfile.GetPlayerProfile().SetWin(levelIndex,true);
+        PlayerProfile.GetPlayerProfile().SetWin(levelIndex, true);
     }
 
     public void PlayerLoses()
@@ -148,10 +158,14 @@ public class GameManager : MonoBehaviour
         if (!isPaused)
         {
             elapsedTime += Time.deltaTime;
-            if (!hasSuccessAppeared && PlayerHasWon())
-                PlayerWins();
-            if (!hasFailureAppeared && PlayerHasLost())
-                PlayerLoses();
+
+            if (!isSandboxMode)
+            {
+                if (!hasSuccessAppeared && PlayerHasWon())
+                    PlayerWins();
+                if (!hasFailureAppeared && PlayerHasLost())
+                    PlayerLoses();
+            }
         }
 
         if (successCondition.mustSeeObject != null && GetMustSeeObjectRenderer().isVisible)

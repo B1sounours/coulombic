@@ -16,7 +16,6 @@ public class GameplayUI : MonoBehaviour
     public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer, failContainer, selectedToolContainer, scoreContainer;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
-    private GameManager gameManager;
 
     private static Sprite[] toolSprites;
     private Tools selectedTool = Tools.add;
@@ -24,7 +23,9 @@ public class GameplayUI : MonoBehaviour
 
     void Start()
     {
-        if (PlayerProfile.GetPlayerProfile().GetShowTip(GetGameManager().levelIndex))
+        bool isSandbox = GameManager.GetGameManager().isSandboxMode;
+        int levelIndex = GameManager.GetGameManager().levelIndex;
+        if (PlayerProfile.GetPlayerProfile().GetShowTip(levelIndex, isSandbox))
             SetGameMenuMode(GameMenuModes.challengeInfo);
         else
             SetGameMenuMode(GameMenuModes.gameplay);
@@ -54,13 +55,13 @@ public class GameplayUI : MonoBehaviour
 
     private void RestartLevel()
     {
-        gameManager.SaveScore();
+        GameManager.GetGameManager().SaveScore();
         Application.LoadLevel(Application.loadedLevel);
     }
 
     private void GotoMainMenu()
     {
-        gameManager.SaveScore();
+        GameManager.GetGameManager().SaveScore();
         Application.LoadLevel("Main Menu");
     }
 
@@ -78,8 +79,11 @@ public class GameplayUI : MonoBehaviour
     public void HideTipsButtonClick()
     {
         PlayerProfile pp = PlayerProfile.GetPlayerProfile();
-        int levelIndex = GetGameManager().levelIndex;
-        pp.SetShowTip(levelIndex,!hideTipsToggle.isOn);
+        bool isSandbox = GameManager.GetGameManager().isSandboxMode;
+
+        int levelIndex = GameManager.GetGameManager().levelIndex;
+        pp.SetShowTip(levelIndex, !hideTipsToggle.isOn, isSandbox);
+
     }
 
     public GameMenuModes GetGameMenuMode()
@@ -94,7 +98,7 @@ public class GameplayUI : MonoBehaviour
 
     public void SetGameMenuMode(GameMenuModes newGameMenuMode)
     {
-        int levelIndex = GetGameManager().levelIndex;
+        int levelIndex = GameManager.GetGameManager().levelIndex;
 
         gameMenuMode = newGameMenuMode;
         MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
@@ -104,7 +108,11 @@ public class GameplayUI : MonoBehaviour
         MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
         MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
         MainMenu.SetUIVisibility(failContainer, gameMenuMode == GameMenuModes.fail);
-        hideTipsToggle.isOn = !PlayerProfile.GetPlayerProfile().GetShowTip(levelIndex);
+
+        bool isSandbox = GameManager.GetGameManager().isSandboxMode;
+        PlayerProfile pp = PlayerProfile.GetPlayerProfile();
+        hideTipsToggle.enabled = pp.GetShowTip(levelIndex, isSandbox);
+
         toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
         challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
@@ -112,7 +120,7 @@ public class GameplayUI : MonoBehaviour
 
     private bool ShouldShowScore()
     {
-        return GetGameManager().successCondition.minScore>0 && gameMenuMode == GameMenuModes.gameplay;
+        return GameManager.GetGameManager().successCondition.minScore > 0 && gameMenuMode == GameMenuModes.gameplay;
     }
 
     private bool ShouldShowToolCharges()
@@ -127,17 +135,10 @@ public class GameplayUI : MonoBehaviour
         SetGameMenuMode(GameMenuModes.gameplay);
     }
 
-    private GameManager GetGameManager()
-    {
-        if (gameManager == null)
-            gameManager = FindObjectOfType<GameManager>();
-        return gameManager;
-    }
-
     public void NextLevelButtonClick()
     {
         SoundManager.PlaySound(GameSounds.click);
-        int levelIndex = GetGameManager().levelIndex + 1;
+        int levelIndex = GameManager.GetGameManager().levelIndex + 1;
         Application.LoadLevel(LevelManager.GetSceneIndexFromLevelIndex(levelIndex));
     }
 

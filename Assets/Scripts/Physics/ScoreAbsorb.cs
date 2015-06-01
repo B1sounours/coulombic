@@ -14,7 +14,6 @@ public class ScoreAbsorb : MonoBehaviour
     public bool ignoreRaycast = true;
 
     private RegionManager regionManager;
-    private GameManager gameManager;
     private static GameObject particlesPrefab;
     private static AudioClip[] lightningSounds;
     private static GameObject particlesContainer;
@@ -55,13 +54,6 @@ public class ScoreAbsorb : MonoBehaviour
                 }
             }
         }
-    }
-
-    private GameManager GetGameManager()
-    {
-        if (gameManager == null)
-            gameManager = FindObjectOfType<GameManager>();
-        return gameManager;
     }
 
     private GameObject GetParticlesContainer()
@@ -115,8 +107,8 @@ public class ScoreAbsorb : MonoBehaviour
                 points += co.charge * negativeChargeMultiplier;
         }
 
-        if (GetGameManager() != null)
-            GetGameManager().AddScore(points);
+        if (GameManager.GetGameManager() != null)
+            GameManager.GetGameManager().AddScore(points);
     }
 
     private void MakeLightning(Vector3 position)

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class UpdateStopwatchUI : MonoBehaviour
 {
-    private GameManager gameManager;
     private Image stopwatchImage;
     public Image[] sliceImages;
 
@@ -15,14 +14,7 @@ public class UpdateStopwatchUI : MonoBehaviour
     void Start()
     {
         stopwatchImage = GetComponent<Image>();
-        sliceInterval = GetGameManager().GetVictoryTimerDuration() / sliceImages.Length;
-    }
-
-    private GameManager GetGameManager()
-    {
-        if (gameManager == null)
-            gameManager = FindObjectOfType<GameManager>();
-        return gameManager;
+        sliceInterval = GameManager.GetGameManager().GetVictoryTimerDuration() / sliceImages.Length;
     }
 
     private void UpdateAppearance()
@@ -34,7 +26,7 @@ public class UpdateStopwatchUI : MonoBehaviour
 
     void Update()
     {
-        if (!GetGameManager().GetIsPaused())
+        if (!GameManager.GetGameManager().GetIsPaused())
         {
             sliceTimer += Time.deltaTime;
             if (sliceTimer > sliceInterval)

@@ -8,7 +8,6 @@ public class RegionManager : MonoBehaviour
     private List<ChargedObject> chargedObjects;
     private List<MovingChargedObject> movingChargedObjects;
     private bool isInitialized = false;
-    private GameManager gameManager;
     private bool hasAppliedStartVelocity = false;
 
     void Start()
@@ -25,7 +24,7 @@ public class RegionManager : MonoBehaviour
             StartAllCoroutines();
             isInitialized = true;
         }
-        if (!hasAppliedStartVelocity && (isSplashMenu || !GetGameManager().GetIsPaused()))
+        if (!hasAppliedStartVelocity && (isSplashMenu || !GameManager.GetGameManager().GetIsPaused()))
             ApplyStartVelocities();
     }
 
@@ -56,13 +55,6 @@ public class RegionManager : MonoBehaviour
         if (regionManager == null)
             Debug.LogError("ScoreWall must be the child of a RegionManager.");
         return regionManager;
-    }
-
-    private GameManager GetGameManager()
-    {
-        if (gameManager == null)
-            gameManager = FindObjectOfType<GameManager>();
-        return gameManager;
     }
 
     private bool AllChargedObjectsAreGenerated()
@@ -154,7 +146,7 @@ public class RegionManager : MonoBehaviour
             }
             else
             {
-                if (isSplashMenu || !GetGameManager().GetIsPaused())
+                if (isSplashMenu || !GameManager.GetGameManager().GetIsPaused())
                     ApplyMagneticForce(mco);
                 yield return new WaitForSeconds(GameSettings.magnetInterval);
             }

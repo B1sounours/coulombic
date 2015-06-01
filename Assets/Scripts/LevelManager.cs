@@ -26,6 +26,7 @@ public static class LevelManager
 {
     private static bool isStarted = false;
     private static List<Level> levels;
+    private static Level sandboxLevel;
 
     private static void StartIfNotStarted()
     {
@@ -63,6 +64,13 @@ public static class LevelManager
         AddLevel("Ion Scoop",
             "Pull in as many particles as possible into the big sphere.",
             "You won't be able to catch them all, but how can you catch the most?");
+    }
+
+    public static Level GetSandboxLevel()
+    {
+        return new Level("Sandbox",
+                "Experiment however you like!",
+                "Press 'X' to open the sandbox menu. If you press 'R' to reset, all objects and changes you made before pressing 'G' will go back to how they were when you made them. Also, resets will erase all changes you made after you turned time on.");
     }
 
     private static void AddLevel(string title, string goal, string tip)
