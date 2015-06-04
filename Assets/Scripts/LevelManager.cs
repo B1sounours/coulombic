@@ -70,7 +70,7 @@ public static class LevelManager
     {
         return new Level("Sandbox",
                 "Experiment however you like!",
-                "Press 'X' to open the sandbox menu. If you press 'R' to reset, all objects and changes you made before pressing 'G' will go back to how they were when you made them. Also, resets will erase all changes you made after you turned time on.");
+                "Press 'Q' to open the sandbox menu. If you press 'R' to reset, all objects and changes you made before pressing 'G' will go back to how they were when you made them. Also, resets will erase all changes you made after you turned time on.");
     }
 
     public static bool IsValidLevelIndex(int levelIndex)

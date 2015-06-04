@@ -13,7 +13,7 @@ public class GameplayUI : MonoBehaviour
     public Text selectedToolCount;
     public Toggle hideTipsToggle;
 
-    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer, failContainer, selectedToolContainer, scoreContainer, sandboxHotkeyContainer;
+    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer, failContainer, selectedToolContainer, scoreContainer;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
 
@@ -104,7 +104,6 @@ public class GameplayUI : MonoBehaviour
         MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
         MainMenu.SetUIVisibility(selectedToolContainer, ShouldShowToolCharges());
         MainMenu.SetUIVisibility(scoreContainer, ShouldShowScore());
-        MainMenu.SetUIVisibility(sandboxHotkeyContainer, ShouldShowSandboxHotkey());
         MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect);
         MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
         MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
@@ -119,11 +118,6 @@ public class GameplayUI : MonoBehaviour
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
     }
 
-    private bool ShouldShowSandboxHotkey()
-    {
-        return GameManager.GetGameManager().isSandboxMode && gameMenuMode == GameMenuModes.gameplay;
-    }
-
     private bool ShouldShowScore()
     {
         return GameManager.GetGameManager().successCondition.minScore > 0 && gameMenuMode == GameMenuModes.gameplay;
@@ -133,12 +127,6 @@ public class GameplayUI : MonoBehaviour
     {
         ClickTool clickTool = FindObjectOfType<ClickTool>();
         return clickTool.HasAtLeastOneToolCharge() && gameMenuMode == GameMenuModes.gameplay;
-    }
-
-    public void StayHereButtonClick()
-    {
-        SoundManager.PlaySound(GameSounds.click);
-        SetGameMenuMode(GameMenuModes.gameplay);
     }
 
     public void NextLevelButtonClick()
@@ -154,7 +142,7 @@ public class GameplayUI : MonoBehaviour
         RestartLevel();
     }
 
-    public void ChallengeInfoButtonClick()
+    public void ResumeGameplayButton()
     {
         SoundManager.PlaySound(GameSounds.click);
         SetGameMenuMode(GameMenuModes.gameplay);
