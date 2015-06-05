@@ -15,13 +15,21 @@ public class UpdateStopwatchUI : MonoBehaviour
     {
         stopwatchImage = GetComponent<Image>();
         sliceInterval = GameManager.GetGameManager().GetVictoryTimerDuration() / sliceImages.Length;
+        UpdateAppearance();
     }
 
     private void UpdateAppearance()
     {
-        stopwatchImage.enabled = true;
-        for (int i = 0; i < sliceImages.Length; i++)
-            sliceImages[i].enabled = i > sliceIndex;
+        if (GameManager.GetGameManager().isSandboxMode)
+        {
+            MainMenu.SetUIVisibility(gameObject, false);
+        }
+        else
+        {
+            stopwatchImage.enabled = true;
+            for (int i = 0; i < sliceImages.Length; i++)
+                sliceImages[i].enabled = i > sliceIndex;
+        }
     }
 
     void Update()

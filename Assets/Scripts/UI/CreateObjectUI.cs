@@ -100,8 +100,8 @@ public class CreateObjectUI : MonoBehaviour
 
     public ChargedObjectSettings GetChargedObjectSettingsFromUI()
     {
-        Vector3 startVelocity = new Vector3(xVelocitySlider.value, yVelocitySlider.value, zVelocitySlider.value);
-        return new ChargedObjectSettings(showChargeToggle.isOn, integerCoordsToggle.isOn, canMoveToggle.isOn, massSlider.value, chargeSlider.value, startVelocity);
+        Vector3 startVelocity = new Vector3(GetAdjustedSliderValue(xVelocitySlider), GetAdjustedSliderValue(yVelocitySlider), GetAdjustedSliderValue(zVelocitySlider));
+        return new ChargedObjectSettings(showChargeToggle.isOn, integerCoordsToggle.isOn, canMoveToggle.isOn, GetAdjustedSliderValue(massSlider), GetAdjustedSliderValue(chargeSlider), startVelocity);
     }
 
     public void SelectShape(int shapeCode)
