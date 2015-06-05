@@ -116,6 +116,7 @@ public class CreateObjectUI : MonoBehaviour
         mco.enabled = false;
         co.UpdateValues(chargedObjectSettings);
         mco.UpdateValues(chargedObjectSettings);
+        cursorGameObject.transform.position = new Vector3(0, -100000, 0);
 
         foreach (GameObject child in ParentChildFunctions.GetAllChildren(cursorGameObject, true))
             if (child.GetComponent<Collider>() != null)
