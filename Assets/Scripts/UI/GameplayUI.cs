@@ -19,7 +19,7 @@ public class GameplayUI : MonoBehaviour
 
     private static Sprite[] toolSprites;
     private Tools selectedTool = Tools.add;
-
+    private CreateObjectUI createObjectUI;
 
     void Start()
     {
@@ -40,7 +40,7 @@ public class GameplayUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.G))
         {
             SetGameMenuMode(GameMenuModes.gameplay);
-            FindObjectOfType<GameManager>().SetGamePause(false);
+            GameManager.GetGameManager().SetGamePause(false);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -51,6 +51,13 @@ public class GameplayUI : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.M))
             GotoMainMenu();
+    }
+
+    private CreateObjectUI GetCreateObjectUI()
+    {
+        if (createObjectUI == null)
+            createObjectUI = FindObjectOfType<CreateObjectUI>();
+        return createObjectUI;
     }
 
     private void RestartLevel()
@@ -170,6 +177,8 @@ public class GameplayUI : MonoBehaviour
         ClickTool clickTool = FindObjectOfType<ClickTool>();
         int count = GetToolCharges(toolIndex);
         selectedToolCount.text = ToolSelectUI.GetCountText(count, FindObjectOfType<ClickTool>());
+
+        GetCreateObjectUI().SetShowCursor(selectedTool == Tools.create);
     }
 
     private int GetToolCharges(int toolIndex)

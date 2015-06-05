@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public enum SandboxShapes
 {
@@ -35,10 +36,90 @@ public class CreateObjectUI : MonoBehaviour
     private SandboxShapes sandboxShape = SandboxShapes.sphere;
     private float sliderExponent;
 
+    private bool showCursor = false;
+    private GameObject cursorGameObject;
+    private Dictionary<SandboxShapes, GameObject> cursorPrefabs;
+    private bool shouldRemakeCursor = false;
+
     void Start()
     {
         UpdateSliderMaximums();
         UpdateCreateObjectUI();
+        StartCoroutine(RemakeCursorCycle());
+    }
+
+    void Update()
+    {
+        if (showCursor)
+            GetCursorGameObject().transform.position = GetCursorPosition();
+    }
+
+    private IEnumerator RemakeCursorCycle()
+    {
+        //too expensive to remake the gameobject every every time slider values change since sliders are smooth
+        //this updates on a timer instead
+
+        while (true)
+        {
+            if (shouldRemakeCursor)
+                RemakeCursorGameObject();
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    public Vector3 GetCursorPosition()
+    {
+        Vector3 origin = Camera.main.gameObject.transform.position;
+        float range = 5;
+        Vector3 position = origin + Camera.main.transform.forward * range;
+        if (GetChargedObjectSettingsFromUI().integerCoords)
+            position = new Vector3(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z));
+        return position;
+    }
+
+    private GameObject GetCursorGameObject()
+    {
+        if (cursorGameObject == null)
+            RemakeCursorGameObject();
+        return cursorGameObject;
+    }
+
+    private Dictionary<SandboxShapes, GameObject> GetCursorPrefabs()
+    {
+        if (cursorPrefabs == null)
+        {
+            cursorPrefabs = new Dictionary<SandboxShapes, GameObject>();
+            cursorPrefabs.Add(SandboxShapes.cube, Resources.Load<GameObject>("prefabs/cube"));
+            cursorPrefabs.Add(SandboxShapes.sphere, Resources.Load<GameObject>("prefabs/sphere"));
+        }
+        return cursorPrefabs;
+    }
+
+    public void SetShowCursor(bool showCursor)
+    {
+        this.showCursor = showCursor;
+        if (!showCursor && cursorGameObject != null)
+            Destroy(cursorGameObject);
+    }
+
+    private void RemakeCursorGameObject()
+    {
+        shouldRemakeCursor = false;
+
+        Destroy(cursorGameObject);
+        ChargedObjectSettings chargedObjectSettings = GetChargedObjectSettingsFromUI();
+
+        cursorGameObject = Instantiate(GetCursorPrefabs()[sandboxShape]);
+        ChargedObject co = cursorGameObject.AddComponent<ChargedObject>();
+        MovingChargedObject mco = cursorGameObject.AddComponent<MovingChargedObject>();
+        co.enabled = false;
+        mco.enabled = false;
+        co.UpdateValues(chargedObjectSettings);
+        mco.UpdateValues(chargedObjectSettings);
+
+        foreach (GameObject child in ParentChildFunctions.GetAllChildren(cursorGameObject, true))
+            if (child.GetComponent<Collider>() != null)
+                child.GetComponent<Collider>().enabled = false;
     }
 
     private void UpdateSliderMaximums()
@@ -49,7 +130,7 @@ public class CreateObjectUI : MonoBehaviour
         chargeSlider.minValue = -Mathf.Pow(GameSettings.maximumCharge, sliderExponent);
 
         massSlider.maxValue = Mathf.Pow(GameSettings.maximumMass, sliderExponent);
-        massSlider.minValue = -Mathf.Pow(GameSettings.maximumMass, sliderExponent);
+        massSlider.minValue = 1;
 
         xVelocitySlider.maxValue = Mathf.Pow(GameSettings.maximumVelocity, sliderExponent);
         xVelocitySlider.minValue = -Mathf.Pow(GameSettings.maximumVelocity, sliderExponent);
@@ -63,9 +144,11 @@ public class CreateObjectUI : MonoBehaviour
 
     public void UpdateCreateObjectUI()
     {
-        chargeText.text = "Charge: " + GetSliderValueString(chargeSlider,0,true);
+        chargeText.text = "Charge: " + GetSliderValueString(chargeSlider, 0, true);
         massText.text = "Mass: " + GetSliderValueString(massSlider, 1, false);
         velocityText.text = "(" + GetSliderValueString(xVelocitySlider, 1) + ", " + GetSliderValueString(yVelocitySlider, 1) + ", " + GetSliderValueString(zVelocitySlider, 1) + ")";
+
+        shouldRemakeCursor = true;
     }
 
     private string GetSliderValueString(Slider slider, int sigFigs)
@@ -86,14 +169,14 @@ public class CreateObjectUI : MonoBehaviour
             for (; sigFigs > 0; sigFigs--)
                 formatString += "0";
         }
-        return sign+GetAdjustedSliderValue(slider).ToString(formatString);
+        return sign + GetAdjustedSliderValue(slider).ToString(formatString);
     }
 
     private float GetAdjustedSliderValue(Slider slider)
     {
         if (slider.value == 0)
             return 0;
-        float value= Mathf.Pow(Mathf.Abs( slider.value), 1 / sliderExponent);
+        float value = Mathf.Pow(Mathf.Abs(slider.value), 1 / sliderExponent);
         float signedValue = value * Mathf.Abs(slider.value) / slider.value;
         return signedValue;
     }

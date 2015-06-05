@@ -58,6 +58,13 @@ public class ChargedObject : MonoBehaviour
             MainMenu.SetUIVisibility(canvasGameObject, false);
     }
 
+    public void UpdateValues(ChargedObjectSettings chargedObjectSettings)
+    {
+        charge = chargedObjectSettings.charge;
+        showCharge = chargedObjectSettings.showCharge;
+        UpdateAppearance();
+    }
+
     private GameObject GetCanvasPrefab()
     {
         if (canvasPrefab == null)

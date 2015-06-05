@@ -16,8 +16,12 @@ public class ChargedObjectUI : MonoBehaviour {
         GetComponent<Canvas>().enabled = true;
         MainMenu.SetUIVisibility(lockContainer, showLock);
         fuzzyCircle.enabled = !showLock;
-    
-        string text = charge.ToString();
+
+        string formatString = "0";
+        if (Mathf.Abs(charge - Mathf.Round(charge)) > 0.1f)
+            formatString = "0.0";
+
+        string text = charge.ToString(formatString);
         if (charge > 0)
             text = "+" + text;
         chargeLabel.text = text;

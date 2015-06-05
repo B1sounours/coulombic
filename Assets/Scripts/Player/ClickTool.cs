@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum Tools
 {
-    add = 0, subtract = 1, divide = 2, multiply = 3
+    add = 0, subtract = 1, divide = 2, multiply = 3, delete=4,create=5
 }
 
 public class ClickTool : MonoBehaviour

@@ -19,6 +19,13 @@ public class MovingChargedObject : MonoBehaviour
         GetRigidbody().mass = mass;
     }
 
+    public void UpdateValues(ChargedObjectSettings chargedObjectSettings)
+    {
+        mass = chargedObjectSettings.mass;
+        startVelocity = chargedObjectSettings.startVelocity;
+        UpdateSize();
+    }
+
     public void UpdateSize()
     {
         float radius = Mathf.Pow(mass, 0.3333f);
