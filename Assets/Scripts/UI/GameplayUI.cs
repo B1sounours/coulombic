@@ -94,6 +94,13 @@ public class GameplayUI : MonoBehaviour
 
     }
 
+    public void ResetSandboxClick()
+    {
+        SandboxManager.ClearSandboxHistory();
+        SoundManager.PlaySound(GameSounds.click);
+        RestartLevel();
+    }
+
     public GameMenuModes GetGameMenuMode()
     {
         return gameMenuMode;

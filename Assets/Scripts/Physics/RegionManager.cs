@@ -18,7 +18,7 @@ public class RegionManager : MonoBehaviour
 
     void Update()
     {
-        if (!isInitialized && AllChargedObjectsAreGenerated() && !GameManager.GetGameManager().isSandboxMode)
+        if (!isInitialized && AllChargedObjectsAreGenerated() && (isSplashMenu || !GameManager.GetGameManager().isSandboxMode))
         {
             FindChargedObjects();
             isInitialized = true;

@@ -19,12 +19,6 @@ public class MovingChargedObject : MonoBehaviour
         GetRigidbody().mass = mass;
     }
 
-    void Update()
-    {
-        if (!GameManager.GetGameManager().HasSimulationBegun())
-            GetRigidbody().velocity = Vector3.zero;
-    }
-
     public void SetFrozenPosition(bool isFrozen)
     {
         GetRigidbody().constraints = isFrozen ? RigidbodyConstraints.FreezeAll : RigidbodyConstraints.None;

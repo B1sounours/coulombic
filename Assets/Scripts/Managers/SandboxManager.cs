@@ -75,6 +75,12 @@ public class SandboxManager : MonoBehaviour
         }
     }
 
+    public static void ClearSandboxHistory()
+    {
+        sandboxHistory = new List<ChargedObjectSettings>();
+        coordinateHistory = new Dictionary<Vector3, ChargedObjectSettings>();
+    }
+
     private void AddToHistory(ChargedObjectSettings cos)
     {
         sandboxHistory.Add(cos);
