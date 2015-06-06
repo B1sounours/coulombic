@@ -76,7 +76,7 @@ public class MainMenu : MonoBehaviour
     {
         sandboxClickCount++;
         SoundManager.PlaySound(GameSounds.click);
-        if (PlayerProfile.GetPlayerProfile().IsSandboxUnlocked())
+        if (PlayerProfile.GetPlayerProfile().IsSandboxUnlocked() || sandboxClickCount>=10)
             Application.LoadLevel("sandbox");
         else
             SetMenuMode(MenuModes.sandbox);
