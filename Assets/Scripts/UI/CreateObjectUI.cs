@@ -191,5 +191,6 @@ public class CreateObjectUI : MonoBehaviour
     public void SelectShape(int shapeCode)
     {
         sandboxShape = shapeCode == 0 ? SandboxShapes.sphere : SandboxShapes.cube;
+        UpdateCreateObjectUI();
     }
 }
