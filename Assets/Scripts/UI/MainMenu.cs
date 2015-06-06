@@ -19,6 +19,7 @@ public class MainMenu : MonoBehaviour
         SetMenuMode(MenuModes.clear);
         SetupPuzzleSelectListeners();
         PlayerProfile.GetPlayerProfile();
+        GameplayUI.SetShowCursor(true);
     }
 
     private void SetMenuMode(MenuModes newMenuMode)

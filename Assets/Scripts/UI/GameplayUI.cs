@@ -54,6 +54,12 @@ public class GameplayUI : MonoBehaviour
             GotoMainMenu();
     }
 
+    public static void SetShowCursor(bool showCursor)
+    {
+        Cursor.lockState = showCursor ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = showCursor;
+    }
+
     private CreateObjectUI GetCreateObjectUI()
     {
         if (createObjectUI == null)
@@ -117,6 +123,8 @@ public class GameplayUI : MonoBehaviour
         bool isSandbox = GameManager.GetGameManager().isSandboxMode;
 
         gameMenuMode = newGameMenuMode;
+
+        SetShowCursor(gameMenuMode != GameMenuModes.gameplay);
         gameplayCanvas.enabled = gameMenuMode == GameMenuModes.gameplay;
         MainMenu.SetUIVisibility(selectedToolContainer, ShouldShowToolCharges());
         MainMenu.SetUIVisibility(scoreContainer, ShouldShowScore());
