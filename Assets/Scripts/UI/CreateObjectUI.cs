@@ -3,10 +3,6 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public enum SandboxShapes
-{
-    sphere, cube
-}
 
 public class ChargedObjectSettings
 {
@@ -14,8 +10,9 @@ public class ChargedObjectSettings
     public bool showCharge, integerCoords, canMove;
     public float mass, charge;
     public Vector3 startVelocity;
+    public SandboxShapes shape;
 
-    public ChargedObjectSettings(bool showCharge, bool integerCoords, bool canMove, float mass, float charge, Vector3 startVelocity)
+    public ChargedObjectSettings(bool showCharge, bool integerCoords, bool canMove, float mass, float charge, Vector3 startVelocity,SandboxShapes shape)
     {
         this.showCharge = showCharge;
         this.integerCoords = integerCoords;
@@ -24,6 +21,8 @@ public class ChargedObjectSettings
         this.mass = mass;
         this.charge = charge;
         this.startVelocity = startVelocity;
+
+        this.shape = shape;
     }
 }
 
@@ -38,7 +37,6 @@ public class CreateObjectUI : MonoBehaviour
 
     private bool showCursor = false;
     private GameObject cursorGameObject;
-    private Dictionary<SandboxShapes, GameObject> cursorPrefabs;
     private bool shouldRemakeCursor = false;
 
     void Start()
@@ -84,17 +82,6 @@ public class CreateObjectUI : MonoBehaviour
         return cursorGameObject;
     }
 
-    private Dictionary<SandboxShapes, GameObject> GetCursorPrefabs()
-    {
-        if (cursorPrefabs == null)
-        {
-            cursorPrefabs = new Dictionary<SandboxShapes, GameObject>();
-            cursorPrefabs.Add(SandboxShapes.cube, Resources.Load<GameObject>("prefabs/cube"));
-            cursorPrefabs.Add(SandboxShapes.sphere, Resources.Load<GameObject>("prefabs/sphere"));
-        }
-        return cursorPrefabs;
-    }
-
     public void SetShowCursor(bool showCursor)
     {
         this.showCursor = showCursor;
@@ -109,7 +96,7 @@ public class CreateObjectUI : MonoBehaviour
         Destroy(cursorGameObject);
         ChargedObjectSettings chargedObjectSettings = GetChargedObjectSettingsFromUI();
 
-        cursorGameObject = Instantiate(GetCursorPrefabs()[sandboxShape]);
+        cursorGameObject = Instantiate(SandboxManager.GetSandboxPrefabs() [sandboxShape]);
         ChargedObject co = cursorGameObject.AddComponent<ChargedObject>();
         MovingChargedObject mco = cursorGameObject.AddComponent<MovingChargedObject>();
         co.enabled = false;
@@ -185,7 +172,7 @@ public class CreateObjectUI : MonoBehaviour
     public ChargedObjectSettings GetChargedObjectSettingsFromUI()
     {
         Vector3 startVelocity = new Vector3(GetAdjustedSliderValue(xVelocitySlider), GetAdjustedSliderValue(yVelocitySlider), GetAdjustedSliderValue(zVelocitySlider));
-        return new ChargedObjectSettings(showChargeToggle.isOn, integerCoordsToggle.isOn, canMoveToggle.isOn, GetAdjustedSliderValue(massSlider), GetAdjustedSliderValue(chargeSlider), startVelocity);
+        return new ChargedObjectSettings(showChargeToggle.isOn, integerCoordsToggle.isOn, canMoveToggle.isOn, GetAdjustedSliderValue(massSlider), GetAdjustedSliderValue(chargeSlider), startVelocity,sandboxShape);
     }
 
     public void SelectShape(int shapeCode)

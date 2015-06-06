@@ -26,6 +26,13 @@ public class MovingChargedObject : MonoBehaviour
         UpdateSize();
     }
 
+    public void ApplyStartVelocity()
+    {
+        //if this is done while game is paused, it may not work
+        if (startVelocity.sqrMagnitude > 0)
+            gameObject.GetComponent<Rigidbody>().velocity = startVelocity;
+    }
+
     public void UpdateSize()
     {
         float radius = Mathf.Pow(mass, 0.3333f);

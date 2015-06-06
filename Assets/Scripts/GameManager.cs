@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
         MakeTemple();
         score = startingScore;
         mustMoveAroundStartPosition = GetPlayer().transform.position;
+        if (isSandboxMode && FindObjectOfType<SandboxManager>() == null)
+            gameObject.AddComponent<SandboxManager>();
     }
 
     public static GameManager GetGameManager()

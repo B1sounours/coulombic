@@ -21,7 +21,6 @@ public class RegionManager : MonoBehaviour
         if (!isInitialized && AllChargedObjectsAreGenerated())
         {
             FindChargedObjects();
-            StartAllCoroutines();
             isInitialized = true;
         }
         if (!hasAppliedStartVelocity && (isSplashMenu || !GameManager.GetGameManager().GetIsPaused()))
@@ -32,10 +31,31 @@ public class RegionManager : MonoBehaviour
     {
         hasAppliedStartVelocity = true;
         foreach (MovingChargedObject mco in movingChargedObjects)
+            mco.ApplyStartVelocity();
+    }
+
+    public void AddChargedObject(ChargedObject chargedObject)
+    {
+        chargedObjects.Add(chargedObject);
+        chargedObject.UpdateAppearance();
+        MovingChargedObject mco=chargedObject.gameObject.GetComponent<MovingChargedObject>();
+        if (mco != null)
         {
-            if (mco.startVelocity.sqrMagnitude > 0)
-                mco.gameObject.GetComponent<Rigidbody>().velocity = mco.startVelocity;
+            movingChargedObjects.Add(mco);
+            if (hasAppliedStartVelocity)
+                mco.ApplyStartVelocity();
+            StartCoroutine(Cycle(mco));
         }
+    }
+
+    public void DeleteChargedObject(ChargedObject chargedObject)
+    {
+        GameObject go = chargedObject.gameObject;
+        MovingChargedObject mco = go.GetComponent<MovingChargedObject>();
+        chargedObjects.Remove(chargedObject);
+        if (mco != null)
+            movingChargedObjects.Remove(mco);
+        Destroy(go);
     }
 
     public static RegionManager GetMyRegionManager(GameObject childObject)
@@ -91,24 +111,11 @@ public class RegionManager : MonoBehaviour
         {
             ChargedObject co = go.GetComponent<ChargedObject>();
             if (co != null)
-            {
-                chargedObjects.Add(co);
-                co.UpdateAppearance();
-                if (go.GetComponent<MovingChargedObject>() != null)
-                    movingChargedObjects.Add(go.GetComponent<MovingChargedObject>());
-            }
+                AddChargedObject(co);
         }
         //Debug.Log("found " + chargedObjects.Count + " charged");
         //Debug.Log("found " + movingChargedObjects.Count + " moving charged");
     }
-
-    private void StartAllCoroutines()
-    {
-        foreach (MovingChargedObject mco in movingChargedObjects)
-            StartCoroutine(Cycle(mco));
-        //StartCoroutine(RecalculateMagnetInterval());
-    }
-
 
     private IEnumerator RecalculateMagnetInterval()
     {

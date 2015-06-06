@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum Tools
 {
-    add = 0, subtract = 1, divide = 2, multiply = 3, delete=4,create=5
+    add = 0, subtract = 1, divide = 2, multiply = 3, delete = 4, create = 5
 }
 
 public class ClickTool : MonoBehaviour
@@ -12,18 +12,46 @@ public class ClickTool : MonoBehaviour
     private GameplayUI gameplayUI;
     public int[] toolCharges;
     public bool infiniteCharges = false;
+    private SandboxManager sandboxManager;
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && GetGameplayUI().GetGameMenuMode() == GameMenuModes.gameplay)
         {
-            Vector3 pos = transform.position;
-            Vector3 forward = Camera.main.transform.forward;
-            RaycastHit rayCastHit = new RaycastHit();
-            bool isHit = Physics.Linecast(pos, pos + forward * range, out rayCastHit);
-            if (isHit)
-                Click(rayCastHit.collider.gameObject);
+            Tools tool = GetGameplayUI().GetSelectedTool();
+            GameObject clickedObject = GetClickedObject();
+            if (tool == Tools.create)
+            {
+                GetSandboxManager().CreateClick();
+            }
+            else if (clickedObject != null)
+            {
+                if (tool == Tools.delete)
+                    GetSandboxManager().DeleteClick(GetClickedObject());
+                else
+                {
+                    ModifyChargeClick(GetClickedObject());
+                }
+            }
         }
+    }
+
+    private GameObject GetClickedObject()
+    {
+        Vector3 pos = transform.position;
+        Vector3 forward = Camera.main.transform.forward;
+        RaycastHit rayCastHit = new RaycastHit();
+        bool isHit = Physics.Linecast(pos, pos + forward * range, out rayCastHit);
+        if (!isHit)
+            return null;
+        return rayCastHit.collider.gameObject;
+    }
+
+    private SandboxManager GetSandboxManager()
+    {
+        if (sandboxManager == null)
+            sandboxManager = FindObjectOfType<SandboxManager>();
+        return sandboxManager;
     }
 
     public bool HasAtLeastOneToolCharge()
@@ -41,8 +69,10 @@ public class ClickTool : MonoBehaviour
         return gameplayUI;
     }
 
-    private void Click(GameObject clickedObject)
+    private void ModifyChargeClick(GameObject clickedObject)
     {
+        if (clickedObject == null)
+            return;
         ChargedObject co = clickedObject.GetComponent<ChargedObject>();
         Tools tool = GetGameplayUI().GetSelectedTool();
         if (co != null)
