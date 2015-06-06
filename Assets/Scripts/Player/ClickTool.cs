@@ -22,7 +22,7 @@ public class ClickTool : MonoBehaviour
             GameObject clickedObject = GetClickedObject();
             if (tool == Tools.create)
             {
-                GetSandboxManager().CreateClick();
+                GetSandboxManager().CreateClick(!GameManager.GetGameManager().HasSimulationBegun());
             }
             else if (clickedObject != null)
             {

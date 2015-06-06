@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public bool startPaused = true;
     private bool isPaused = true;
+    private bool hasSimulationBegun = false;
     public GameObject templeRegion;
     public int levelIndex = 0;
     public float startingScore = 0;
@@ -78,9 +79,16 @@ public class GameManager : MonoBehaviour
         gameplayGameObject.transform.position = Vector3.zero;
     }
 
+    public bool HasSimulationBegun()
+    {
+        return hasSimulationBegun;
+    }
+
     public void SetGamePause(bool isPaused)
     {
         this.isPaused = isPaused;
+        if (!isPaused)
+            hasSimulationBegun = true;
 
         foreach (ChargedObject co in FindObjectsOfType<ChargedObject>())
             co.enabled = !isPaused;

@@ -9,10 +9,10 @@ public class ChargedObjectSettings
     //when the system issues a command to create a charged object, either through the sandbox or a sandbox scene reset, this contains all info required to create one object
     public bool showCharge, integerCoords, canMove;
     public float mass, charge;
-    public Vector3 startVelocity;
+    public Vector3 startVelocity,position;
     public SandboxShapes shape;
 
-    public ChargedObjectSettings(bool showCharge, bool integerCoords, bool canMove, float mass, float charge, Vector3 startVelocity,SandboxShapes shape)
+    public ChargedObjectSettings(bool showCharge, bool integerCoords, bool canMove, float mass, float charge, Vector3 position, Vector3 startVelocity,SandboxShapes shape)
     {
         this.showCharge = showCharge;
         this.integerCoords = integerCoords;
@@ -21,6 +21,8 @@ public class ChargedObjectSettings
         this.mass = mass;
         this.charge = charge;
         this.startVelocity = startVelocity;
+
+        this.position = position;
 
         this.shape = shape;
     }
@@ -70,7 +72,7 @@ public class CreateObjectUI : MonoBehaviour
         Vector3 origin = Camera.main.gameObject.transform.position;
         float range = 5;
         Vector3 position = origin + Camera.main.transform.forward * range;
-        if (GetChargedObjectSettingsFromUI().integerCoords)
+        if (integerCoordsToggle.isOn)
             position = new Vector3(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z));
         return position;
     }
@@ -172,7 +174,8 @@ public class CreateObjectUI : MonoBehaviour
     public ChargedObjectSettings GetChargedObjectSettingsFromUI()
     {
         Vector3 startVelocity = new Vector3(GetAdjustedSliderValue(xVelocitySlider), GetAdjustedSliderValue(yVelocitySlider), GetAdjustedSliderValue(zVelocitySlider));
-        return new ChargedObjectSettings(showChargeToggle.isOn, integerCoordsToggle.isOn, canMoveToggle.isOn, GetAdjustedSliderValue(massSlider), GetAdjustedSliderValue(chargeSlider), startVelocity,sandboxShape);
+        Vector3 position = GetCursorPosition();
+        return new ChargedObjectSettings(showChargeToggle.isOn, integerCoordsToggle.isOn, canMoveToggle.isOn, GetAdjustedSliderValue(massSlider), GetAdjustedSliderValue(chargeSlider), position,startVelocity, sandboxShape);
     }
 
     public void SelectShape(int shapeCode)

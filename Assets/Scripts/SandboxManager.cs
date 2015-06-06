@@ -10,10 +10,24 @@ public enum SandboxShapes
 public class SandboxManager : MonoBehaviour
 {
 
-    public List<ChargedObjectSettings> sandboxObjects;
+    public static List<ChargedObjectSettings> sandboxHistory;
     private static Dictionary<SandboxShapes, GameObject> sandboxPrefabs;
     private CreateObjectUI createObjectUI;
     private RegionManager regionManager;
+
+    void Start()
+    {
+        if (sandboxHistory == null)
+            sandboxHistory = new List<ChargedObjectSettings>();
+        if (sandboxHistory.Count > 0)
+            RemakeAllFromSandboxHistory();
+    }
+
+    private void RemakeAllFromSandboxHistory()
+    {
+        foreach (ChargedObjectSettings cos in sandboxHistory)
+            MakeChargedObject(cos);
+    }
 
     public static Dictionary<SandboxShapes, GameObject> GetSandboxPrefabs()
     {
@@ -40,30 +54,31 @@ public class SandboxManager : MonoBehaviour
         return createObjectUI;
     }
 
-    public void CreateClick()
+    public void CreateClick(bool addToSandboxHistory)
     {
-        if (sandboxObjects == null)
-            sandboxObjects = new List<ChargedObjectSettings>();
-
         SoundManager.PlaySound(GameSounds.click);
-        GameObject newObject= MakeChargedObject();
-        GetRegionManager().AddChargedObject(newObject.GetComponent<ChargedObject>());
+
+        ChargedObjectSettings chargedObjectSettings = GetCreateObjectUI().GetChargedObjectSettingsFromUI();
+        MakeChargedObject(chargedObjectSettings);
+        if (addToSandboxHistory)
+            sandboxHistory.Add(chargedObjectSettings);
     }
 
-    public GameObject MakeChargedObject()
+    public GameObject MakeChargedObject(ChargedObjectSettings chargedObjectSettings)
     {
-        ChargedObjectSettings cos = GetCreateObjectUI().GetChargedObjectSettingsFromUI();
-
-        GameObject newObject = Instantiate(SandboxManager.GetSandboxPrefabs()[cos.shape]);
+        GameObject newObject = Instantiate(SandboxManager.GetSandboxPrefabs()[chargedObjectSettings.shape]);
+        newObject.transform.parent = GetRegionManager().gameObject.transform;
         ChargedObject co = newObject.AddComponent<ChargedObject>();
-        co.UpdateValues(cos);
+        co.UpdateValues(chargedObjectSettings);
 
-        if (cos.canMove)
+        if (chargedObjectSettings.canMove)
         {
             MovingChargedObject mco = newObject.AddComponent<MovingChargedObject>();
-            mco.UpdateValues(cos);
+            mco.UpdateValues(chargedObjectSettings);
         }
-        newObject.transform.position = GetCreateObjectUI().GetCursorPosition();
+        newObject.transform.position = chargedObjectSettings.position ;
+
+        GetRegionManager().AddChargedObject(co);
         return newObject;
     }
 

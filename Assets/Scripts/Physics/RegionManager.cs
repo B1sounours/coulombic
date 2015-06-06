@@ -27,21 +27,35 @@ public class RegionManager : MonoBehaviour
             ApplyStartVelocities();
     }
 
+    private List<ChargedObject> GetChargedObjects()
+    {
+        if (chargedObjects == null)
+            chargedObjects = new List<ChargedObject>();
+        return chargedObjects;
+    }
+
+    private List<MovingChargedObject> GetMovingChargedObjects()
+    {
+        if (movingChargedObjects == null)
+            movingChargedObjects = new List<MovingChargedObject>();
+        return movingChargedObjects;
+    }
+
     private void ApplyStartVelocities()
     {
         hasAppliedStartVelocity = true;
-        foreach (MovingChargedObject mco in movingChargedObjects)
+        foreach (MovingChargedObject mco in GetMovingChargedObjects())
             mco.ApplyStartVelocity();
     }
 
     public void AddChargedObject(ChargedObject chargedObject)
     {
-        chargedObjects.Add(chargedObject);
+        GetChargedObjects().Add(chargedObject);
         chargedObject.UpdateAppearance();
         MovingChargedObject mco=chargedObject.gameObject.GetComponent<MovingChargedObject>();
         if (mco != null)
         {
-            movingChargedObjects.Add(mco);
+            GetMovingChargedObjects().Add(mco);
             if (hasAppliedStartVelocity)
                 mco.ApplyStartVelocity();
             StartCoroutine(Cycle(mco));
@@ -52,9 +66,9 @@ public class RegionManager : MonoBehaviour
     {
         GameObject go = chargedObject.gameObject;
         MovingChargedObject mco = go.GetComponent<MovingChargedObject>();
-        chargedObjects.Remove(chargedObject);
+        GetChargedObjects().Remove(chargedObject);
         if (mco != null)
-            movingChargedObjects.Remove(mco);
+            GetMovingChargedObjects().Remove(mco);
         Destroy(go);
     }
 
@@ -91,8 +105,8 @@ public class RegionManager : MonoBehaviour
         MovingChargedObject movingChargedObject = chargedObject.gameObject.GetComponent<MovingChargedObject>();
         if (movingChargedObject != null)
         {
-            if (movingChargedObjects.Contains(movingChargedObject))
-                movingChargedObjects.Remove(movingChargedObject);
+            if (GetMovingChargedObjects().Contains(movingChargedObject))
+                GetMovingChargedObjects().Remove(movingChargedObject);
             else
                 Debug.LogError("DestroyChargedObject called but RegionManager does not have this mco.");
         }
@@ -105,16 +119,12 @@ public class RegionManager : MonoBehaviour
 
     private void FindChargedObjects()
     {
-        chargedObjects = new List<ChargedObject>();
-        movingChargedObjects = new List<MovingChargedObject>();
         foreach (GameObject go in ParentChildFunctions.GetAllChildren(gameObject, false))
         {
             ChargedObject co = go.GetComponent<ChargedObject>();
             if (co != null)
                 AddChargedObject(co);
         }
-        //Debug.Log("found " + chargedObjects.Count + " charged");
-        //Debug.Log("found " + movingChargedObjects.Count + " moving charged");
     }
 
     private IEnumerator RecalculateMagnetInterval()
@@ -162,7 +172,7 @@ public class RegionManager : MonoBehaviour
     {
         Vector3 newForce = new Vector3(0, 0, 0);
 
-        foreach (ChargedObject chargedObject in chargedObjects)
+        foreach (ChargedObject chargedObject in GetChargedObjects())
         {
             if (mco.GetChargedObject() == chargedObject || chargedObject.ignoreOtherMovingChargedObjects)
                 continue;
