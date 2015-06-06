@@ -20,16 +20,12 @@ public class UpdateStopwatchUI : MonoBehaviour
 
     private void UpdateAppearance()
     {
-        if (GameManager.GetGameManager().isSandboxMode)
-        {
-            MainMenu.SetUIVisibility(gameObject, false);
-        }
-        else
-        {
-            stopwatchImage.enabled = true;
-            for (int i = 0; i < sliceImages.Length; i++)
-                sliceImages[i].enabled = i > sliceIndex;
-        }
+        bool showStopwatch = !GameManager.GetGameManager().isSandboxMode;
+        
+        stopwatchImage.enabled = showStopwatch;
+        for (int i = 0; i < sliceImages.Length; i++)
+            sliceImages[i].enabled = i >= sliceIndex && showStopwatch;
+
     }
 
     void Update()

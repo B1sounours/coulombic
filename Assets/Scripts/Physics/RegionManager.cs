@@ -52,8 +52,6 @@ public class RegionManager : MonoBehaviour
             transformParent = transformParent.parent;
         }
 
-        if (regionManager == null)
-            Debug.LogError("ScoreWall must be the child of a RegionManager.");
         return regionManager;
     }
 

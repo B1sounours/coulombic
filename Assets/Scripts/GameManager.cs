@@ -71,8 +71,9 @@ public class GameManager : MonoBehaviour
 
     private void StartUI()
     {
-        GameObject prefab = Resources.Load<GameObject>("prefabs/GameplayCanvas");
+        GameObject prefab = Resources.Load<GameObject>("prefabs/UserInterface");
         GameObject gameplayGameObject = Instantiate(prefab);
+        gameplayGameObject.transform.position = Vector3.zero;
     }
 
     public void SetGamePause(bool isPaused)

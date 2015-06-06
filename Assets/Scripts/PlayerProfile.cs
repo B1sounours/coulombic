@@ -71,6 +71,8 @@ public class PlayerProfile
 
     public float GetScore(int levelIndex)
     {
+        if (!LevelManager.IsValidLevelIndex(levelIndex))
+            return 0;
         return playerProfileData.levelScores[levelIndex];
     }
 

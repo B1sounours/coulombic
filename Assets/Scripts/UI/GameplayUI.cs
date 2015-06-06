@@ -13,7 +13,8 @@ public class GameplayUI : MonoBehaviour
     public Text selectedToolCount;
     public Toggle hideTipsToggle;
 
-    public GameObject toolSelectContainer, gameplayContainer, challengeInfoContainer, successContainer, failContainer, selectedToolContainer, scoreContainer, sandboxContainer;
+    public GameObject selectedToolContainer, scoreContainer;
+    public Canvas toolSelectCanvas, gameplayCanvas, challengeCanvas, successCanvas, failCanvas, sandboxCanvas, stopwatchCanvas;
 
     private GameMenuModes gameMenuMode = GameMenuModes.gameplay;
 
@@ -109,21 +110,28 @@ public class GameplayUI : MonoBehaviour
         bool isSandbox = GameManager.GetGameManager().isSandboxMode;
 
         gameMenuMode = newGameMenuMode;
-        MainMenu.SetUIVisibility(gameplayContainer, gameMenuMode == GameMenuModes.gameplay);
+        gameplayCanvas.enabled = gameMenuMode == GameMenuModes.gameplay;
         MainMenu.SetUIVisibility(selectedToolContainer, ShouldShowToolCharges());
         MainMenu.SetUIVisibility(scoreContainer, ShouldShowScore());
-        MainMenu.SetUIVisibility(toolSelectContainer, gameMenuMode == GameMenuModes.toolSelect && !isSandbox);
-        MainMenu.SetUIVisibility(sandboxContainer, gameMenuMode == GameMenuModes.toolSelect && isSandbox);
-        MainMenu.SetUIVisibility(challengeInfoContainer, gameMenuMode == GameMenuModes.challengeInfo);
-        MainMenu.SetUIVisibility(successContainer, gameMenuMode == GameMenuModes.success);
-        MainMenu.SetUIVisibility(failContainer, gameMenuMode == GameMenuModes.fail);
+        toolSelectCanvas.enabled = gameMenuMode == GameMenuModes.toolSelect && !isSandbox;
+        sandboxCanvas.enabled = gameMenuMode == GameMenuModes.toolSelect && isSandbox;
+        challengeCanvas.enabled = gameMenuMode == GameMenuModes.challengeInfo;
+        successCanvas.enabled = gameMenuMode == GameMenuModes.success;
+        failCanvas.enabled = gameMenuMode == GameMenuModes.fail;
+        stopwatchCanvas.enabled = ShouldShowStopwatch();
 
         PlayerProfile pp = PlayerProfile.GetPlayerProfile();
         hideTipsToggle.isOn = !pp.GetShowTip(levelIndex, isSandbox);
 
-        toolSelectContainer.GetComponent<ToolSelectUI>().UpdateAppearance();
-        challengeInfoContainer.GetComponent<ChallengeUI>().UpdateAppearance();
+        toolSelectCanvas.GetComponent<ToolSelectUI>().UpdateAppearance();
+        challengeCanvas.GetComponent<ChallengeUI>().UpdateAppearance();
         FindObjectOfType<MouseLook>().enabled = gameMenuMode == GameMenuModes.gameplay;
+    }
+
+    private bool ShouldShowStopwatch()
+    {
+        GameManager gm = GameManager.GetGameManager();
+        return gm.successCondition.time > 0 && gameMenuMode == GameMenuModes.gameplay;
     }
 
     private bool ShouldShowScore()
@@ -184,7 +192,7 @@ public class GameplayUI : MonoBehaviour
     private int GetToolCharges(int toolIndex)
     {
         ClickTool clickTool = FindObjectOfType<ClickTool>();
-        if (toolIndex< clickTool.toolCharges.Length)
+        if (toolIndex < clickTool.toolCharges.Length)
             return clickTool.toolCharges[toolIndex];
         return 0;
     }
