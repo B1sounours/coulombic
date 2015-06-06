@@ -6,6 +6,7 @@ public class MainMenu : MonoBehaviour
 {
     public GameObject puzzleContainer, creditsContainer, sandboxContainer, optionsContainer;
     public Button[] mainButtons;
+    private int sandboxClickCount = 0;
 
     private enum MenuModes
     {
@@ -73,6 +74,7 @@ public class MainMenu : MonoBehaviour
 
     public void SandboxClick()
     {
+        sandboxClickCount++;
         SoundManager.PlaySound(GameSounds.click);
         if (PlayerProfile.GetPlayerProfile().IsSandboxUnlocked())
             Application.LoadLevel("sandbox");

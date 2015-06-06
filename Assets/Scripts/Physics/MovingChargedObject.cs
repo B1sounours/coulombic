@@ -7,7 +7,7 @@ public class MovingChargedObject : MonoBehaviour
 {
     public float mass = 1;
     public Vector3 startVelocity;
-    private Rigidbody rigidbody;
+    //private Rigidbody rigidbody;
     private ChargedObject chargedObject;
 
     void Start()
@@ -58,22 +58,21 @@ public class MovingChargedObject : MonoBehaviour
 
     public void AddForce(Vector3 force)
     {
-        if (rigidbody != null)
-            rigidbody.AddForce(force);
+        if (GetComponent<Rigidbody>() != null)
+            GetComponent<Rigidbody>().AddForce(force);
     }
 
     public Rigidbody GetRigidbody()
     {
-        if (rigidbody == null)
+        if (GetComponent<Rigidbody>() == null)
         {
             if (GetComponent<Rigidbody>() == null)
                 gameObject.AddComponent<Rigidbody>();
-            rigidbody = GetComponent<Rigidbody>();
             if (mass <= 0)
                 Debug.LogError("mass is below zero. " + mass);
-            rigidbody.mass = mass;
-            rigidbody.useGravity = false;
+            GetComponent<Rigidbody>().mass = mass;
+            GetComponent<Rigidbody>().useGravity = false;
         }
-        return rigidbody;
+        return GetComponent<Rigidbody>();
     }
 }

@@ -48,7 +48,7 @@ public class PlayerProfile
 
     public bool IsSandboxUnlocked()
     {
-        return true || AreAllLevelsComplete();
+        return AreAllLevelsComplete();
     }
 
     public bool AreAllLevelsComplete()

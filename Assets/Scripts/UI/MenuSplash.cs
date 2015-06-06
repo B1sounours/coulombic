@@ -52,7 +52,7 @@ public class MenuSplash : MonoBehaviour
         int likelyChargeSign = Random.Range(1, 3) == 1 ? 1 : -1;
 
         List<IntVector3> usedPoints = new List<IntVector3>();
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 30; i++)
         {
             float charge = GetRandomCharge(likelyChargeSign);
 
