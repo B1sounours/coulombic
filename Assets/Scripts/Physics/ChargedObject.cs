@@ -13,6 +13,7 @@ public class ChargedObject : MonoBehaviour
 
     private GameObject canvasGameObject;
     private static GameObject canvasPrefab;
+    private ChargedObjectSettings chargedObjectSettings;
 
     private Text canvasText;
     private Image canvasImage;
@@ -29,6 +30,11 @@ public class ChargedObject : MonoBehaviour
                 UpdateAppearance();
             }
         }
+    }
+
+    public ChargedObjectSettings GetChargedObjectSettings()
+    {
+        return chargedObjectSettings;
     }
 
     public void UpdateAppearance()
@@ -60,9 +66,10 @@ public class ChargedObject : MonoBehaviour
 
     public void UpdateValues(ChargedObjectSettings chargedObjectSettings)
     {
+        this.chargedObjectSettings = chargedObjectSettings;
         charge = chargedObjectSettings.charge;
         showCharge = chargedObjectSettings.showCharge;
-        UpdateAppearance();
+        UpdateAppearance();        
     }
 
     private GameObject GetCanvasPrefab()

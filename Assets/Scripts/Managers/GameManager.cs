@@ -87,8 +87,12 @@ public class GameManager : MonoBehaviour
     public void SetGamePause(bool isPaused)
     {
         this.isPaused = isPaused;
-        if (!isPaused)
+        if (!isPaused && !HasSimulationBegun())
+        {
             hasSimulationBegun = true;
+            foreach (MovingChargedObject mco in FindObjectsOfType<MovingChargedObject>())
+                mco.SetFrozenPosition(false);
+        }
 
         foreach (ChargedObject co in FindObjectsOfType<ChargedObject>())
             co.enabled = !isPaused;

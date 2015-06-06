@@ -23,6 +23,21 @@ public static class ParentChildFunctions
         return parents;
     }
 
+    public static void SetCollidersOfChildren(GameObject parentGameObject, bool isColliderEnabled, bool includeParent = false)
+    {
+        foreach (GameObject child in GetAllChildren(parentGameObject, includeParent))
+        {
+            if (child.GetComponent<MeshCollider>() != null)
+                child.GetComponent<MeshCollider>().enabled = isColliderEnabled;
+            if (child.GetComponent<Collider>() != null)
+                child.GetComponent<Collider>().enabled = isColliderEnabled;
+            if (child.GetComponent<SphereCollider>() != null)
+                child.GetComponent<SphereCollider>().enabled = isColliderEnabled;
+            if (child.GetComponent<BoxCollider>() != null)
+                child.GetComponent<BoxCollider>().enabled = isColliderEnabled;
+        }
+    }
+
     public static ArrayList GetAllChildren(GameObject parentGameObject, string[] excludeSubstrings, bool includeParent = false)
     {
         //returns an arraylist of all children, grandchildren, etc.

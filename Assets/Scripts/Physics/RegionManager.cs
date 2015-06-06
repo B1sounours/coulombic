@@ -18,11 +18,12 @@ public class RegionManager : MonoBehaviour
 
     void Update()
     {
-        if (!isInitialized && AllChargedObjectsAreGenerated())
+        if (!isInitialized && AllChargedObjectsAreGenerated() && !GameManager.GetGameManager().isSandboxMode)
         {
             FindChargedObjects();
             isInitialized = true;
         }
+
         if (!hasAppliedStartVelocity && (isSplashMenu || !GameManager.GetGameManager().GetIsPaused()))
             ApplyStartVelocities();
     }
@@ -52,7 +53,7 @@ public class RegionManager : MonoBehaviour
     {
         GetChargedObjects().Add(chargedObject);
         chargedObject.UpdateAppearance();
-        MovingChargedObject mco=chargedObject.gameObject.GetComponent<MovingChargedObject>();
+        MovingChargedObject mco = chargedObject.gameObject.GetComponent<MovingChargedObject>();
         if (mco != null)
         {
             GetMovingChargedObjects().Add(mco);
@@ -60,16 +61,6 @@ public class RegionManager : MonoBehaviour
                 mco.ApplyStartVelocity();
             StartCoroutine(Cycle(mco));
         }
-    }
-
-    public void DeleteChargedObject(ChargedObject chargedObject)
-    {
-        GameObject go = chargedObject.gameObject;
-        MovingChargedObject mco = go.GetComponent<MovingChargedObject>();
-        GetChargedObjects().Remove(chargedObject);
-        if (mco != null)
-            GetMovingChargedObjects().Remove(mco);
-        Destroy(go);
     }
 
     public static RegionManager GetMyRegionManager(GameObject childObject)
@@ -110,7 +101,7 @@ public class RegionManager : MonoBehaviour
             else
                 Debug.LogError("DestroyChargedObject called but RegionManager does not have this mco.");
         }
-        chargedObjects.Remove(chargedObject);
+        GetChargedObjects().Remove(chargedObject);
 
         Destroy(chargedObject.gameObject);
         Destroy(chargedObject);
@@ -174,6 +165,18 @@ public class RegionManager : MonoBehaviour
 
         foreach (ChargedObject chargedObject in GetChargedObjects())
         {
+            if (chargedObject == null)
+            {
+
+                string stuff = "";
+                foreach (ChargedObject co in GetChargedObjects())
+                    if (co != null)
+                        stuff += " '" + co.gameObject + "'";
+                    else
+                        stuff += " null";
+                Debug.Log("null thingy weird! " + GetChargedObjects().Count + "   " + stuff);
+            }
+
             if (mco.GetChargedObject() == chargedObject || chargedObject.ignoreOtherMovingChargedObjects)
                 continue;
 
@@ -186,6 +189,10 @@ public class RegionManager : MonoBehaviour
 
             newForce += force * direction * GameSettings.magnetInterval;
         }
+
+        //if two charged particles occupy the same space, the newForce is (NaN,NaN,NaN) and AddForce throws an error
+        if (float.IsNaN(newForce.x))
+            newForce = Vector3.zero;
 
         mco.AddForce(newForce);
     }

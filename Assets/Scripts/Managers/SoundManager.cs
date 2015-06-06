@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public enum GameSounds
 {
-    click = 0, depleted = 1, victory = 2, fail = 3
+    click = 0, depleted = 1, victory = 2, fail = 3, refuse=4
 }
 
 public static class SoundManager
@@ -21,6 +21,7 @@ public static class SoundManager
         sounds.Add(Resources.Load<AudioClip>("sounds/depleted"));
         sounds.Add(Resources.Load<AudioClip>("sounds/victory"));
         sounds.Add(Resources.Load<AudioClip>("sounds/fail"));
+        sounds.Add(Resources.Load<AudioClip>("sounds/depleted"));
     }
 
     public static void PlaySound(GameSounds gameSound)
