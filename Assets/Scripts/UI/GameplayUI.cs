@@ -199,6 +199,11 @@ public class GameplayUI : MonoBehaviour
         SetGameMenuMode(GameMenuModes.gameplay);
     }
 
+    public void SelectToolClick(int toolIndex)
+    {
+        SelectToolClick((Tools)toolIndex);
+    }
+
     public void SelectToolClick(Tools tool)
     {
         if (GetClickTool().CanSelectTool(tool))
@@ -206,6 +211,10 @@ public class GameplayUI : MonoBehaviour
             SelectTool(tool);
             SoundManager.PlaySound(GameSounds.click);
             SetGameMenuMode(GameMenuModes.gameplay);
+        }
+        else
+        {
+            Debug.Log("SelectToolClick but cannot select tool.");
         }
     }
 
