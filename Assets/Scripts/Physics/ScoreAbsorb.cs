@@ -118,9 +118,17 @@ public class ScoreAbsorb : MonoBehaviour
         float lifetime = particles.GetComponent<ParticleSystem>().duration + particles.GetComponent<ParticleSystem>().startLifetime;
         Destroy(particles, lifetime);
 
-        float volume = 100 / Mathf.Pow(Vector3.Distance(Camera.main.gameObject.transform.position, position), 2);
-        volume = Mathf.Clamp(volume, 0, 1);
-        AudioSource.PlayClipAtPoint(GetRandomLightningSound(), position, volume);
+        if (ShouldPlayLightningSound())
+        {
+            float volume = 100 / Mathf.Pow(Vector3.Distance(Camera.main.gameObject.transform.position, position), 2);
+            volume = Mathf.Clamp(volume, 0, 1);
+            AudioSource.PlayClipAtPoint(GetRandomLightningSound(), position, volume);
+        }
+    }
+
+    private bool ShouldPlayLightningSound()
+    {
+        return GameManager.GetGameManager() != null;
     }
 
     void OnCollisionEnter(Collision collision)

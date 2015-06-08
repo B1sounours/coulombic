@@ -43,7 +43,7 @@ public static class LevelManager
             "If you turn on time you'll notice all the objects are coming towards you. Why is that? You need to move your mouse to look around. Then press 'G' or spacebar.");
         AddLevel("Moving",
             "Move around.",
-            "When you start time, a few cool things will happen. But you won't see anything from here! To move around, press the keyboard keys 'WASD'. Also, 'Q' and 'E' to move up and down. Start time by pressing 'G' and then move around.");
+            "When you start time, a few cool things will happen. But you won't see anything from here! To move around, press the keyboard keys 'WASD'. Also, 'Q' and 'E' moves you up and down. Start time by pressing 'G' and then move around.");
 
         AddLevel("Opposites Attract",
             "Stop the objects from flying apart.",

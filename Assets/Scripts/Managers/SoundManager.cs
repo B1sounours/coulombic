@@ -25,7 +25,7 @@ public static class SoundManager
     }
 
     public static void PlaySound(GameSounds gameSound)
-    {
+    {        
         GameObject player = GameObject.Find("player");
         PlaySound(gameSound, player.transform.position);
     }
