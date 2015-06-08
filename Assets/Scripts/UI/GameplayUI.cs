@@ -21,6 +21,7 @@ public class GameplayUI : MonoBehaviour
     private static Sprite[] toolSprites;
     private Tools selectedTool = Tools.add;
     private CreateObjectUI createObjectUI;
+    private ClickTool clickTool;
 
     void Start()
     {
@@ -52,6 +53,25 @@ public class GameplayUI : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.M))
             GotoMainMenu();
+
+        for (int i = 1; i < 10; i++)
+            if (GetAlphaKeyDown(i))
+            {
+                Tools tool = (Tools)(i - 1);
+                SelectToolClick(tool);
+            }
+    }
+
+    private bool GetAlphaKeyDown(int number)
+    {
+        return Input.GetKeyDown((KeyCode)(48 + number));
+    }
+
+    private ClickTool GetClickTool()
+    {
+        if (clickTool == null)
+            clickTool = FindObjectOfType<ClickTool>();
+        return clickTool;
     }
 
     public static void SetShowCursor(bool showCursor)
@@ -82,10 +102,10 @@ public class GameplayUI : MonoBehaviour
     private void SelectAnyAvailableTool()
     {
         ClickTool clickTool = FindObjectOfType<ClickTool>();
-        for (int i = 0; i < clickTool.toolCharges.Length; i++)
-            if (clickTool.toolCharges[i] > 0)
+        for (int toolIndex = 0; toolIndex < clickTool.toolCharges.Length; toolIndex++)
+            if (clickTool.toolCharges[toolIndex] > 0)
             {
-                SelectTool(i);
+                SelectTool((Tools)toolIndex);
                 break;
             }
     }
@@ -179,16 +199,19 @@ public class GameplayUI : MonoBehaviour
         SetGameMenuMode(GameMenuModes.gameplay);
     }
 
-    public void SelectToolClick(int toolID)
+    public void SelectToolClick(Tools tool)
     {
-        SelectTool(toolID);
-        SoundManager.PlaySound(GameSounds.click);
-        SetGameMenuMode(GameMenuModes.gameplay);
+        if (GetClickTool().CanSelectTool(tool))
+        {
+            SelectTool(tool);
+            SoundManager.PlaySound(GameSounds.click);
+            SetGameMenuMode(GameMenuModes.gameplay);
+        }
     }
 
-    private void SelectTool(int toolID)
+    private void SelectTool(Tools newTool)
     {
-        selectedTool = (Tools)toolID;
+        selectedTool = newTool;
         UpdateSelectedToolAppearance();
     }
 

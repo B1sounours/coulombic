@@ -69,6 +69,13 @@ public class ClickTool : MonoBehaviour
         return gameplayUI;
     }
 
+    public bool CanSelectTool(Tools tool)
+    {
+        if (!GameManager.GetGameManager().isSandboxMode && (tool == Tools.create || tool == Tools.delete))
+            return false;
+        return infiniteCharges || toolCharges[(int)tool] > 0;
+    }
+
     private void ModifyChargeClick(GameObject clickedObject)
     {
         if (clickedObject == null)

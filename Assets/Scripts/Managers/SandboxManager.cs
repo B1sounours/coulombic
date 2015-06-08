@@ -96,20 +96,18 @@ public class SandboxManager : MonoBehaviour
         //if a charge was changed in sandbox mode before starting the sim, then sandbox history must be updated with the tool use
         if (!GameManager.GetGameManager().HasSimulationBegun())
             UpdateHistory(chargedObject);
-        else
-            Debug.Log("not updating history, sim began");
     }
 
     private void UpdateHistory(ChargedObject chargedObject)
     {
         if (GetChargedObjects().ContainsKey(chargedObject))
         {
-            Debug.Log("udpating history " + chargedObject.charge);
+            //Debug.Log("udpating history " + chargedObject.charge);
             GetChargedObjects()[chargedObject].charge = chargedObject.charge;
         }
         else
         {
-            Debug.Log("UpdateHistory does not contain key");
+            //Debug.Log("UpdateHistory does not contain key");
         }
     }
 
