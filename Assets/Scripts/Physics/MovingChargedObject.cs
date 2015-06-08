@@ -57,7 +57,7 @@ public class MovingChargedObject : MonoBehaviour
             vectorGameObject.transform.SetParent(transform);
             vectorGameObject.transform.rotation = Quaternion.LookRotation(startVelocity.normalized);
             float sidewaysScale = radius/2;
-            float lengthScale = Mathf.Sqrt(startVelocity.magnitude);
+            float lengthScale = Mathf.Pow(startVelocity.magnitude,0.3333f);
             vectorGameObject.transform.GetChild(0).localScale = new Vector3(sidewaysScale, sidewaysScale, lengthScale);
         }
     }
