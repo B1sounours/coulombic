@@ -6,12 +6,14 @@ public class FlightController : MonoBehaviour
 
     private class MovementData
     {
-        public float acceleration = 3f;
+        public float acceleration = 5f;
         public float speed = 0;
         public float maxSpeed = 30;
         public float decayRate = 0.95f;
     }
     MovementData forward, sideways, up;
+
+    private float sprintMultiplier = 3f;
 
     void Update()
     {
@@ -23,6 +25,11 @@ public class FlightController : MonoBehaviour
         Vector3 velocity = Camera.main.transform.forward * getForward().speed + sidewaysVector * getSideways().speed + Camera.main.transform.up * getUp().speed;
         velocity *= Time.deltaTime;
         transform.position = transform.position + velocity;
+    }
+
+    private bool IsSprinting()
+    {
+        return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
     }
 
     private MovementData getForward()
@@ -56,10 +63,14 @@ public class FlightController : MonoBehaviour
 
     private void updateMovementData(MovementData movementData, KeyCode increase1, KeyCode increase2, KeyCode decrease1, KeyCode decrease2, KeyCode halt)
     {
+        float deltaV = movementData.acceleration * Time.deltaTime;
+        if (IsSprinting())
+            deltaV *= sprintMultiplier;
+
         if (Input.GetKey(increase1) || Input.GetKey(increase2))
-            movementData.speed += movementData.acceleration * Time.deltaTime;
+            movementData.speed += deltaV;
         else if (Input.GetKey(decrease1) || Input.GetKey(decrease2))
-            movementData.speed -= movementData.acceleration * Time.deltaTime;
+            movementData.speed -= deltaV;
         else if (Input.GetKey(halt))
             movementData.speed = 0;
         else
@@ -69,6 +80,9 @@ public class FlightController : MonoBehaviour
                 movementData.speed = 0;
         }
 
-        movementData.speed = Mathf.Clamp(movementData.speed, -movementData.maxSpeed, movementData.maxSpeed);
+        float maxSpeed = movementData.maxSpeed;
+        if (IsSprinting())
+            maxSpeed *= sprintMultiplier;
+        movementData.speed = Mathf.Clamp(movementData.speed, -maxSpeed, maxSpeed);
     }
 }

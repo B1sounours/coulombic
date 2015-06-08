@@ -13,7 +13,7 @@ public class RegionManager : MonoBehaviour
     void Start()
     {
         foreach (MovingChargedObject mco in FindObjectsOfType<MovingChargedObject>())
-            mco.UpdateSize();
+            mco.UpdateAppearance();
     }
 
     void Update()
