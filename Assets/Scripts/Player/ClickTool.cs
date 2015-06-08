@@ -103,6 +103,7 @@ public class ClickTool : MonoBehaviour
                 co.charge = Mathf.Clamp(co.charge, -GameSettings.maximumCharge, GameSettings.maximumCharge);
 
                 co.UpdateAppearance();
+                GetSandboxManager().SendMessageToolChangedCharge(co);
             }
             GetGameplayUI().UpdateSelectedToolAppearance();
         }

@@ -11,7 +11,10 @@ public class SandboxManager : MonoBehaviour
 {
     public static List<ChargedObjectSettings> sandboxHistory;
     public static Dictionary<Vector3, ChargedObjectSettings> coordinateHistory;
+    public static Dictionary<ChargedObject, ChargedObjectSettings> chargedObjects;
+
     private static Dictionary<SandboxShapes, GameObject> sandboxPrefabs;
+
     private CreateObjectUI createObjectUI;
     private RegionManager regionManager;
     private int createCounter = 0;
@@ -22,6 +25,7 @@ public class SandboxManager : MonoBehaviour
             sandboxHistory = new List<ChargedObjectSettings>();
         if (coordinateHistory == null)
             coordinateHistory = new Dictionary<Vector3, ChargedObjectSettings>();
+
         if (sandboxHistory.Count > 0)
             RemakeAllFromSandboxHistory();
     }
@@ -29,7 +33,7 @@ public class SandboxManager : MonoBehaviour
     private void RemakeAllFromSandboxHistory()
     {
         foreach (ChargedObjectSettings cos in sandboxHistory)
-            MakeChargedObject(cos);
+            MakeChargedObject(cos, false);
     }
 
     public static Dictionary<SandboxShapes, GameObject> GetSandboxPrefabs()
@@ -69,9 +73,7 @@ public class SandboxManager : MonoBehaviour
         }
         else
         {
-            MakeChargedObject(chargedObjectSettings);
-            if (addToSandboxHistory)
-                AddToHistory(chargedObjectSettings);
+            ChargedObject newChargedObject = MakeChargedObject(chargedObjectSettings, addToSandboxHistory);
         }
     }
 
@@ -79,12 +81,43 @@ public class SandboxManager : MonoBehaviour
     {
         sandboxHistory = new List<ChargedObjectSettings>();
         coordinateHistory = new Dictionary<Vector3, ChargedObjectSettings>();
+        chargedObjects = new Dictionary<ChargedObject, ChargedObjectSettings>();
     }
 
-    private void AddToHistory(ChargedObjectSettings cos)
+    private void AddToHistory(ChargedObject chargedObject, ChargedObjectSettings chargedObjectSettings)
     {
-        sandboxHistory.Add(cos);
-        coordinateHistory.Add(cos.position, cos);
+        sandboxHistory.Add(chargedObjectSettings);
+        coordinateHistory.Add(chargedObjectSettings.position, chargedObjectSettings);
+        GetChargedObjects().Add(chargedObject, chargedObjectSettings);
+    }
+
+    public void SendMessageToolChangedCharge(ChargedObject chargedObject)
+    {
+        //if a charge was changed in sandbox mode before starting the sim, then sandbox history must be updated with the tool use
+        if (!GameManager.GetGameManager().HasSimulationBegun())
+            UpdateHistory(chargedObject);
+        else
+            Debug.Log("not updating history, sim began");
+    }
+
+    private void UpdateHistory(ChargedObject chargedObject)
+    {
+        if (GetChargedObjects().ContainsKey(chargedObject))
+        {
+            Debug.Log("udpating history " + chargedObject.charge);
+            GetChargedObjects()[chargedObject].charge = chargedObject.charge;
+        }
+        else
+        {
+            Debug.Log("UpdateHistory does not contain key");
+        }
+    }
+
+    private static Dictionary<ChargedObject, ChargedObjectSettings> GetChargedObjects()
+    {
+        if (chargedObjects == null)
+            chargedObjects = new Dictionary<ChargedObject, ChargedObjectSettings>();
+        return chargedObjects;
     }
 
     private void RemoveFromHistory(ChargedObjectSettings cos)
@@ -98,14 +131,14 @@ public class SandboxManager : MonoBehaviour
         return coordinateHistory.ContainsKey(cos.position);
     }
 
-    public GameObject MakeChargedObject(ChargedObjectSettings chargedObjectSettings)
+    public ChargedObject MakeChargedObject(ChargedObjectSettings chargedObjectSettings, bool addToSandboxHistory = false)
     {
         createCounter++;
         GameObject newObject = Instantiate(SandboxManager.GetSandboxPrefabs()[chargedObjectSettings.shape]);
         newObject.name = "sandbox object " + createCounter;
         newObject.transform.parent = GetRegionManager().gameObject.transform;
-        ChargedObject co = newObject.AddComponent<ChargedObject>();
-        co.UpdateValues(chargedObjectSettings);
+        ChargedObject newChargedObject = newObject.AddComponent<ChargedObject>();
+        newChargedObject.UpdateValues(chargedObjectSettings);
 
         if (chargedObjectSettings.canMove)
         {
@@ -115,8 +148,15 @@ public class SandboxManager : MonoBehaviour
         }
         newObject.transform.position = chargedObjectSettings.position;
 
-        GetRegionManager().AddChargedObject(co);
-        return newObject;
+        GetRegionManager().AddChargedObject(newChargedObject);
+
+        if (addToSandboxHistory)
+            AddToHistory(newChargedObject, chargedObjectSettings);
+        if (!GetChargedObjects().ContainsKey(newChargedObject))
+            GetChargedObjects().Add(newChargedObject, chargedObjectSettings);
+
+
+        return newChargedObject;
     }
 
     public void DeleteClick(GameObject clickObject)
