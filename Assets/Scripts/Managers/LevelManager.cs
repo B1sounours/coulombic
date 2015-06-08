@@ -37,20 +37,20 @@ public static class LevelManager
 
         AddLevel("Welcome!",
             "What do you think will happen?",
-            "In this game, objects that are the same push each other apart. Objects that are different pull together. Have a look around. What do you think will happen to these objects when you turn on time? To turn on time, press 'G'.");
+            "In this game, objects that are the same push each other apart. Objects that are different pull together. Have a look around. What do you think will happen to these objects when you turn on time? To turn on time, press 'G' or spacebar.");
         AddLevel("Looking",
             "Turn around.",
-            "If you turn on time by pressing 'G' you'll notice all the objects are coming towards you. Why is that? You need to move your mouse to look around. Then press 'G'.");
+            "If you turn on time you'll notice all the objects are coming towards you. Why is that? You need to move your mouse to look around. Then press 'G' or spacebar.");
         AddLevel("Moving",
             "Move around.",
-            "If you press 'G', a few cool things will happen. But you won't see anything from here! To move around, press the keyboard keys 'WASD'. Then press 'G' to turn on time.");
+            "When you start time, a few cool things will happen. But you won't see anything from here! To move around, press the keyboard keys 'WASD'. Also, 'Q' and 'E' to move up and down. Start time by pressing 'G' and then move around.");
 
         AddLevel("Opposites Attract",
             "Stop the objects from flying apart.",
             "In this challenge, all the objects have the same charge. One! Since they're the same, they push away from each other. But if you left click on them, you can remove electrons and that changes their charge.");
         AddLevel("Likes Repel",
             "Make the objects fly apart as fast as possible.",
-            "In this challenge, you can add OR remove electrons to change the charge. What's the best way to make the objects fly apart the fastest? Your score will be higher if they move faster. Press 'Q' to select a tool.");
+            "In this challenge, you can add OR remove electrons to change the charge. What's the best way to make the objects fly apart the fastest? Your score will be higher if they move faster. Press 'T' to select a tool.");
         AddLevel("Charge Dancing",
             "Make all objects find their partner, and dance their way to victory.",
             "In this challenge, you'll need to add and remove electrons. The dancers on the left need to be the same, and the dancers on the right need to be the same.");
@@ -70,7 +70,7 @@ public static class LevelManager
     {
         return new Level("Sandbox",
                 "Experiment however you like!",
-                "Press 'Q' to open the sandbox menu. If you press 'R' to reset, all objects and changes you made before pressing 'G' will go back to how they were when you made them. Also, resets will erase all changes you made after you turned time on.");
+                "Press 'T' to open the sandbox menu. If you press 'R' to reset, all objects and changes you made before pressing 'G' will go back to how they were when you made them. Also, resets will erase all changes you made after you turned time on.");
     }
 
     public static bool IsValidLevelIndex(int levelIndex)

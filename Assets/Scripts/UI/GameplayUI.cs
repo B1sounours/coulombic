@@ -35,10 +35,10 @@ public class GameplayUI : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.T))
             SetGameMenuMode(gameMenuMode == GameMenuModes.gameplay ? GameMenuModes.toolSelect : GameMenuModes.gameplay);
 
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G) || Input.GetKeyDown(KeyCode.Space))
         {
             SetGameMenuMode(GameMenuModes.gameplay);
             GameManager.GetGameManager().SetGamePause(false);

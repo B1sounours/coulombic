@@ -11,16 +11,16 @@ public class FlightController : MonoBehaviour
         public float maxSpeed = 30;
         public float decayRate = 0.95f;
     }
-    MovementData forward;
-    MovementData sideways;
+    MovementData forward, sideways, up;
 
     void Update()
     {
         updateMovementData(getForward(), KeyCode.W, KeyCode.UpArrow, KeyCode.S, KeyCode.DownArrow, KeyCode.Space);
         updateMovementData(getSideways(), KeyCode.A, KeyCode.LeftArrow, KeyCode.D, KeyCode.RightArrow, KeyCode.Space);
+        updateMovementData(getUp(), KeyCode.Q, KeyCode.Plus, KeyCode.E, KeyCode.Minus, KeyCode.Space);
 
         Vector3 sidewaysVector = Vector3.Cross(Camera.main.transform.forward, Vector3.up).normalized;
-        Vector3 velocity = Camera.main.transform.forward * getForward().speed + sidewaysVector * getSideways().speed;
+        Vector3 velocity = Camera.main.transform.forward * getForward().speed + sidewaysVector * getSideways().speed + Camera.main.transform.up * getUp().speed;
         velocity *= Time.deltaTime;
         transform.position = transform.position + velocity;
     }
@@ -41,6 +41,17 @@ public class FlightController : MonoBehaviour
             sideways.maxSpeed = forward.maxSpeed / 2;
         }
         return sideways;
+    }
+
+    private MovementData getUp()
+    {
+        if (up == null)
+        {
+            up = new MovementData();
+            up.acceleration = forward.acceleration * 2;
+            up.maxSpeed = forward.maxSpeed / 2;
+        }
+        return up;
     }
 
     private void updateMovementData(MovementData movementData, KeyCode increase1, KeyCode increase2, KeyCode decrease1, KeyCode decrease2, KeyCode halt)
