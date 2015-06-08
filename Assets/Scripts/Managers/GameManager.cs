@@ -43,12 +43,7 @@ public class GameManager : MonoBehaviour
         if (isSandboxMode && FindObjectOfType<SandboxManager>() == null)
             gameObject.AddComponent<SandboxManager>();
     }
-
-    public bool GameManagerExists()
-    {
-        return !GetGameManager() == null;
-    }
-
+    
     public static GameManager GetGameManager()
     {
         if (gameManager == null)

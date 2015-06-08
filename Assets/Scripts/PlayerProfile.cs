@@ -3,30 +3,35 @@ using System.Collections;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml;
+using System.Xml.Serialization;
+
+//this contains, saves, and loads scores and settings that can be changed by the player.
+[System.Serializable]
+public class PlayerProfileData
+{
+    public bool[] levelWins;
+    public float[] levelScores;
+    public bool[] showTips;
+    public bool showSandboxTip = true;
+
+    public PlayerProfileData()
+    {
+        int levelCount = LevelManager.GetLevelCount();
+        levelWins = new bool[levelCount];
+        levelScores = new float[levelCount];
+        showTips = new bool[levelCount];
+        for (int i = 0; i < levelCount; i++)
+            showTips[i] = true;
+    }
+}
 
 public class PlayerProfile
 {
-    //this contains, saves, and loads scores and settings that can be changed by the player.
-    [System.Serializable]
-    private class PlayerProfileData
-    {
-        public bool[] levelWins;
-        public float[] levelScores;
-        public bool[] showTips;
-        public bool showSandboxTip = true;
 
-        public PlayerProfileData()
-        {
-            int levelCount = LevelManager.GetLevelCount();
-            levelWins = new bool[levelCount];
-            levelScores = new float[levelCount];
-            showTips = new bool[levelCount];
-            for (int i = 0; i < levelCount; i++)
-                showTips[i] = true;
-        }
-    }
     private PlayerProfileData playerProfileData;
     private static PlayerProfile playerProfile;
+    private static string keyString = "playerProfileData";
 
     public PlayerProfile()
     {
@@ -105,33 +110,32 @@ public class PlayerProfile
 
     private void Save()
     {
+        XmlSerializer serializer = new XmlSerializer(typeof(PlayerProfileData));
 
-        if (playerProfileData == null)
+        using (StringWriter sw = new StringWriter())
         {
-            Debug.LogError("PlayerProfile tried to save a null playerProfileData.");
-        }
-        else
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = File.Create(GetPath());
-            bf.Serialize(fs, playerProfileData);
-            fs.Close();
+            serializer.Serialize(sw, playerProfileData);
+            //Debug.Log(sw.ToString());
+            PlayerPrefs.SetString(keyString, sw.ToString());
         }
     }
 
     private void Load()
     {
-        if (File.Exists(GetPath()))
+        XmlSerializer serializer = new XmlSerializer(typeof(PlayerProfileData));
+        string text = PlayerPrefs.GetString(keyString);
+        if (text.Length == 0)
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = File.Open(GetPath(), FileMode.Open);
-            playerProfileData = (PlayerProfileData)bf.Deserialize(fs);
-            fs.Close();
+            Debug.Log("Did not find PlayerProfileData in PlayerPrefs. Creating new profile.");
+            playerProfileData = new PlayerProfileData();
         }
         else
         {
-            Debug.Log("PlayerProfile found no profile. Making new. " + GetPath());
-            playerProfileData = new PlayerProfileData();
+            using (var reader = new System.IO.StringReader(text))
+            {
+                playerProfileData = serializer.Deserialize(reader) as PlayerProfileData;
+            }
         }
     }
+
 }

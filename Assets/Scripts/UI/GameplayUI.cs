@@ -199,7 +199,7 @@ public class GameplayUI : MonoBehaviour
 
         ClickTool clickTool = FindObjectOfType<ClickTool>();
         int count = GetToolCharges(toolIndex);
-        selectedToolCount.text = ToolSelectUI.GetCountText(count, FindObjectOfType<ClickTool>());
+        selectedToolCount.text = ToolSelectUI.GetCountText(count, clickTool);
 
         GetCreateObjectUI().SetShowCursor(selectedTool == Tools.create);
     }
